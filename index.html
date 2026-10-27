@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Outlive the Group Chat</title>
+<meta name="theme-color" content="#F4F1EA">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Outlive">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" href="icon-192.png">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#F4F1EA; --card:#FFFDF8; --ink:#1F2A2E; --muted:#6B7478; --line:#E4DED2;
+  --accent:#2F6F62; --accent-soft:#DCEBE6; --warm:#C9833A; --warm-soft:#F5E6D3; --down:#9A5B4A;
+  --r:18px; --safe-b:env(safe-area-inset-bottom);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--ink);font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+.wrap{max-width:560px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 18px) 16px calc(96px + var(--safe-b))}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:18px}
+.hello{font:600 28px/1.1 "New York","Iowan Old Style",Georgia,serif;letter-spacing:-.01em}
+.date{color:var(--muted);font-size:14px;margin-top:4px}
+.ver{font-size:11px;color:var(--muted)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
+.card h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.grid .card{margin:0}
+.big{font:600 30px/1 "SF Pro Rounded",-apple-system,sans-serif;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.big small{font-size:15px;font-weight:500;color:var(--muted);margin-left:2px}
+.sub{font-size:13px;color:var(--muted);margin-top:6px}
+.chip{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+.chip.dn{background:var(--warm-soft);color:var(--down)}
+.src{font-size:11px;color:var(--muted);margin-top:8px}
+.row{display:flex;gap:8px}
+.pick{flex:1;padding:10px 0;border-radius:12px;background:var(--bg);font-size:22px;transition:transform .1s}
+.pick.num{font-size:17px;font-weight:600}
+.pick.on{background:var(--accent);color:#fff;transform:scale(1.04)}
+.pick:active{transform:scale(.96)}
+.empty{color:var(--muted);font-size:14px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;background:var(--accent);color:#fff;font-weight:600;width:100%}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,253,248,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:var(--safe-b)}
+nav.tabs .in{display:flex;max-width:560px;width:100%}
+nav.tabs button{flex:1;padding:9px 0 8px;font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
+nav.tabs button span{font-size:21px;filter:grayscale(1);opacity:.6}
+nav.tabs button.on{color:var(--accent);font-weight:600}
+nav.tabs button.on span{filter:none;opacity:1}
+section.view{display:none}
+section.view.on{display:block}
+.soon{text-align:center;padding:40px 16px;color:var(--muted)}
+.soon b{display:block;font:600 20px "New York",Georgia,serif;color:var(--ink);margin-bottom:6px}
+.login{min-height:80vh;display:flex;flex-direction:column;justify-content:center;gap:16px;text-align:center}
+.login h1{font:600 34px/1.1 "New York",Georgia,serif}
+.login p{color:var(--muted)}
+.files label{display:block;border:1.5px dashed var(--line);border-radius:14px;padding:18px;text-align:center;color:var(--muted);cursor:pointer}
+.files input{display:none}
+.log{font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;background:var(--bg);border-radius:12px;padding:10px;margin-top:10px;max-height:260px;overflow:auto}
+.bar{height:6px;background:var(--line);border-radius:6px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+table.counts{width:100%;font-size:14px;border-collapse:collapse}
+table.counts td{padding:6px 0;border-bottom:1px solid var(--line)}
+table.counts td:last-child{text-align:right;font-variant-numeric:tabular-nums}
+.spark{display:flex;align-items:flex-end;gap:3px;height:44px;margin-top:10px}
+.spark i{flex:1;background:var(--accent-soft);border-radius:3px 3px 0 0;min-height:2px}
+.spark i.last{background:var(--accent)}
+.note{font-size:12px;color:var(--muted);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav class="tabs" id="tabs" hidden><div class="in">
+  <button data-tab="today" class="on"><span>🏠</span>Today</button>
+  <button data-tab="trends"><span>📈</span>Trends</button>
+  <button data-tab="meds"><span>💊</span>Meds</button>
+  <button data-tab="care"><span>🩺</span>Care</button>
+  <button data-tab="me"><span>⚙️</span>Me</button>
+</div></nav>
+
+<script>
+const VERSION = '0.1.0';
+const SB_URL = 'https://wwmcugtxyuvkxwurirgu.supabase.co';
+const SB_KEY = 'sb_publishable_uQJ27EvPPtgnBLLLdX5HZA_Q96ho4ZZ';
+const sb = window.supabase.createClient(SB_URL, SB_KEY);
+let user = null;
+const $ = (s, el=document) => el.querySelector(s);
+const app = $('#app');
+const localDay = (d=new Date()) => d.toLocaleDateString('en-CA');
+const addDays = (s, n) => { const d = new Date(s+'T12:00:00'); d.setDate(d.getDate()+n); return localDay(d); };
+const fmtMin = m => m==null ? '—' : `${Math.floor(m/60)}h ${String(Math.round(m%60)).padStart(2,'0')}m`;
+const fmtNum = n => n==null ? '—' : Math.round(n).toLocaleString();
+const avg = a => a.length ? a.reduce((x,y)=>x+y,0)/a.length : null;
+const SRC = {oura:'Oura', sleep_cycle:'Sleep Cycle', watch:'Apple Watch', iphone:'iPhone', withings:'Withings', manual:'Manual', omron:'OMRON'};
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- auth ---------- */
+async function init(){
+  const { data:{ session } } = await sb.auth.getSession();
+  sb.auth.onAuthStateChange((_e, s) => { if (!!s?.user !== !!user) { user = s?.user || null; render(); } });
+  user = session?.user || null;
+  render();
+}
+function render(){
+  if (!user) {
+    $('#tabs').hidden = true;
+    app.innerHTML = `<div class="login">
+      <h1>Operation: Outlive<br>the Group Chat</h1>
+      <p>Your personal health command center.</p>
+      <button class="btn" id="signin">Sign in with Google</button>
+      <p class="ver">v${VERSION}</p></div>`;
+    $('#signin').onclick = () => sb.auth.signInWithOAuth({ provider:'google', options:{ redirectTo: location.origin + location.pathname } });
+    return;
+  }
+  $('#tabs').hidden = false;
+  app.innerHTML = `
+    <section class="view on" id="v-today"></section>
+    <section class="view" id="v-trends"></section>
+    <section class="view" id="v-meds"><div class="soon"><b>Meds</b>Medication list, one-tap tracking and adherence arrive in Phase 3.</div></section>
+    <section class="view" id="v-care"></section>
+    <section class="view" id="v-me"></section>`;
+  showTab(location.hash.slice(1) || 'today');
+}
+document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => { location.hash = b.dataset.tab; showTab(b.dataset.tab); });
+function showTab(t){
+  if (!$('#v-'+t)) t = 'today';
+  document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab===t));
+  document.querySelectorAll('section.view').forEach(v => v.classList.toggle('on', v.id==='v-'+t));
+  ({today:loadToday, trends:loadTrends, care:loadCare, me:loadMe}[t]||(()=>{}))();
+  window.scrollTo(0,0);
+}
+
+/* ---------- today ---------- */
+async function loadToday(){
+  const el = $('#v-today'), today = localDay(), h = new Date().getHours();
+  const greet = h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : 'Good evening';
+  const name = (user.user_metadata?.full_name || '').split(' ')[0] || '';
+  el.innerHTML = `<header class="top"><div><div class="hello">${greet}${name?', '+esc(name):''}</div>
+    <div class="date">${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div></div></header>
+    <div class="empty">Loading…</div>`;
+  const from14 = addDays(today,-14), from30 = addDays(today,-30);
+  const [sleep, cpap, metrics, dr] = await Promise.all([
+    sb.from('sleep_night').select('night,source,asleep_min,bedtime,wake_time').eq('is_primary',true).gte('night',from14).order('night',{ascending:false}),
+    sb.from('cpap_session').select('night,usage_hours,ahi,myair_score').order('night',{ascending:false}).limit(7),
+    sb.from('health_metric').select('day,metric,value,source').eq('is_primary',true).in('metric',['steps','resting_hr','weight_lb','exercise_min']).gte('day',from30).order('day',{ascending:false}),
+    sb.from('daily_record').select('mood,energy').eq('day',today).maybeSingle()
+  ]);
+  const M = k => (metrics.data||[]).filter(r=>r.metric===k);
+  const S = sleep.data||[], C = cpap.data||[];
+  const lastSleep = S[0], sleep7 = avg(S.filter(r=>r.night>addDays(today,-8)).map(r=>r.asleep_min));
+  const steps = M('steps'), stepsToday = steps.find(r=>r.day===today);
+  const steps7 = avg(steps.filter(r=>r.day<today && r.day>=addDays(today,-7)).map(r=>+r.value));
+  const stepsPrev7 = avg(steps.filter(r=>r.day<addDays(today,-7) && r.day>=addDays(today,-14)).map(r=>+r.value));
+  const rhr = M('resting_hr')[0], wt = (await sb.from('health_metric').select('day,value,source').eq('metric','weight_lb').eq('is_primary',true).order('day',{ascending:false}).limit(1)).data?.[0];
+  const pct = (a,b) => (a!=null&&b) ? Math.round((a-b)/b*100) : null;
+  const sp = pct(steps7, stepsPrev7);
+  const hasData = S.length || C.length || steps.length;
+  const mood = dr.data?.mood, energy = dr.data?.energy;
+  el.querySelector('.empty').outerHTML = `
+    ${hasData ? '' : `<div class="card"><h3>No data yet</h3><p class="empty">Go to <b>Me → Import</b> to load your Apple Health history.</p></div>`}
+    <div class="grid">
+      <div class="card"><h3>😴 Sleep</h3>
+        <div class="big">${lastSleep ? `${Math.floor(lastSleep.asleep_min/60)}<small>h</small> ${String(lastSleep.asleep_min%60).padStart(2,'0')}<small>m</small>` : '—'}</div>
+        <div class="sub">${lastSleep ? (lastSleep.night===today ? 'Last night' : 'Night of '+new Date(lastSleep.night+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})) : 'No recent sleep'}${sleep7?` · 7-day ${fmtMin(sleep7)}`:''}</div>
+        ${lastSleep ? `<div class="src">${SRC[lastSleep.source]||lastSleep.source}</div>`:''}</div>
+      <div class="card"><h3>🫁 CPAP</h3>
+        <div class="big">${C[0] ? (+C[0].usage_hours).toFixed(1)+'<small>h</small>' : '—'}</div>
+        <div class="sub">${C[0] ? `AHI ${C[0].ahi} · score ${C[0].myair_score}` : 'Upload myAir in Me'}</div>
+        ${C[0] ? `<div class="src">${new Date(C[0].night+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})} · myAir</div>`:''}</div>
+      <div class="card"><h3>🚶 Steps</h3>
+        <div class="big">${fmtNum(stepsToday?.value)}</div>
+        <div class="sub">7-day avg ${fmtNum(steps7)} ${sp!=null?`<span class="chip ${sp<0?'dn':''}">${sp>0?'↑':sp<0?'↓':''} ${Math.abs(sp)}%</span>`:''}</div></div>
+      <div class="card"><h3>❤️ Resting HR</h3>
+        <div class="big">${rhr ? Math.round(rhr.value)+'<small>bpm</small>' : '—'}</div>
+        <div class="sub">${rhr ? new Date(rhr.day+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : ''}</div></div>
+    </div>
+    <div class="card"><h3>⚖️ Weight</h3>
+      <div class="big">${wt ? (+wt.value).toFixed(1)+'<small>lb</small>' : '—'}</div>
+      <div class="sub">${wt ? 'Last weigh-in '+new Date(wt.day+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : ''}</div></div>
+    <div class="card"><h3>How's today?</h3>
+      <div class="row" id="mood">${['😫','😕','😐','🙂','😃'].map((e,i)=>`<button class="pick ${mood===i+1?'on':''}" data-v="${i+1}" aria-label="Mood ${i+1}">${e}</button>`).join('')}</div>
+      <div class="sub" style="margin:12px 0 6px">Energy</div>
+      <div class="row" id="energy">${[1,2,3,4,5].map(i=>`<button class="pick num ${energy===i?'on':''}" data-v="${i}">${i}</button>`).join('')}</div></div>
+    <p class="note">Not medical advice. Check with your care team about anything that concerns you.</p>`;
+  const save = async (field, v, row) => {
+    row.querySelectorAll('.pick').forEach(b=>b.classList.toggle('on', +b.dataset.v===v));
+    const { error } = await sb.from('daily_record').upsert({ user_id:user.id, day:today, [field]:v, updated_at:new Date().toISOString() }, { onConflict:'user_id,day' });
+    if (error) alert('Could not save: '+error.message);
+  };
+  $('#mood').onclick = e => { const b=e.target.closest('.pick'); if(b) save('mood', +b.dataset.v, $('#mood')); };
+  $('#energy').onclick = e => { const b=e.target.closest('.pick'); if(b) save('energy', +b.dataset.v, $('#energy')); };
+}
+
+/* ---------- trends (basic) ---------- */
+async function loadTrends(){
+  const el = $('#v-trends'), today = localDay(), from = addDays(today,-30);
+  el.innerHTML = `<header class="top"><div class="hello">Trends</div></header><div class="empty">Loading…</div>`;
+  const [sl, st, cp] = await Promise.all([
+    sb.from('sleep_night').select('night,asleep_min').eq('is_primary',true).gte('night',from).order('night'),
+    sb.from('health_metric').select('day,value').eq('metric','steps').eq('is_primary',true).gte('day',from).order('day'),
+    sb.from('cpap_session').select('night,usage_hours').gte('night',from).order('night')
+  ]);
+  const spark = (rows, key) => { const v = rows.map(r=>+r[key]); const mx = Math.max(...v,1);
+    return `<div class="spark">${v.map((x,i)=>`<i class="${i===v.length-1?'last':''}" style="height:${Math.max(4,x/mx*100)}%"></i>`).join('')}</div>`; };
+  const card = (title, rows, key, fmt) => `<div class="card"><h3>${title} · last 30 days</h3>
+    ${rows.length ? `<div class="big">${fmt(avg(rows.map(r=>+r[key])))}</div><div class="sub">average · ${rows.length} days with data</div>${spark(rows,key)}` : '<p class="empty">No data yet</p>'}</div>`;
+  el.querySelector('.empty').outerHTML =
+    card('😴 Sleep', sl.data||[], 'asleep_min', fmtMin) +
+    card('🫁 CPAP use', cp.data||[], 'usage_hours', v=>v.toFixed(1)+'<small>h</small>') +
+    card('🚶 Steps', st.data||[], 'value', fmtNum) +
+    `<p class="note">Fuller 7/30/90-day and 1-year views and the weekly summary arrive in Phase 4.</p>`;
+}
+
+/* ---------- care (labs preview) ---------- */
+async function loadCare(){
+  const el = $('#v-care');
+  el.innerHTML = `<header class="top"><div class="hello">Care</div></header><div class="empty">Loading…</div>`;
+  const { count } = await sb.from('clinical_record').select('id',{count:'exact',head:true});
+  const { data } = await sb.from('clinical_record').select('resource_type,display,recorded_on').in('resource_type',['DiagnosticReport','Immunization']).not('display','is',null).order('recorded_on',{ascending:false}).limit(8);
+  el.querySelector('.empty').outerHTML = `
+    <div class="card"><h3>Health records</h3>
+      ${count ? `<div class="big">${fmtNum(count)}</div><div class="sub">records from MyChart</div>` : '<p class="empty">Import clinical_record.jsonl in Me → Import.</p>'}</div>
+    ${data?.length ? `<div class="card"><h3>Most recent</h3><table class="counts">${data.map(r=>`<tr><td>${esc(r.display)}</td><td>${r.recorded_on||''}</td></tr>`).join('')}</table></div>`:''}
+    <div class="soon"><b>Appointments & questions</b>Arrive in Phase 3.</div>`;
+}
+
+/* ---------- me + importer ---------- */
+const TABLES = ['health_metric','sleep_night','workout','cpap_session','clinical_record','daily_record'];
+async function loadMe(){
+  const el = $('#v-me');
+  el.innerHTML = `<header class="top"><div><div class="hello">Me</div><div class="date">${esc(user.email)}</div></div><div class="ver">v${VERSION}</div></header>
+    <div class="card"><h3>Import</h3>
+      <p class="sub" style="margin:0 0 12px">Select files from <b>import_ready</b> (any or all), or a raw myAir <b>SLEEP_RECORD.csv</b>. Re-importing is safe; duplicates are replaced.</p>
+      <div class="files"><label>Choose files<input type="file" id="files" multiple accept=".csv,.jsonl,.json"></label></div>
+      <div class="bar" hidden id="bar"><i></i></div><div class="log" hidden id="log"></div></div>
+    <div class="card"><h3>Your data</h3><table class="counts" id="counts"><tr><td class="empty">Counting…</td></tr></table></div>
+    <button class="btn ghost" id="signout">Sign out</button>`;
+  $('#files').onchange = e => runImport([...e.target.files]);
+  $('#signout').onclick = () => sb.auth.signOut();
+  refreshCounts();
+}
+async function refreshCounts(){
+  const rows = await Promise.all(TABLES.map(async t => [t, (await sb.from(t).select('*',{count:'exact',head:true})).count ?? 0]));
+  $('#counts').innerHTML = rows.map(([t,n])=>`<tr><td>${t.replace('_',' ')}</td><td>${fmtNum(n)}</td></tr>`).join('');
+}
+function parseCSV(text){
+  const rows=[]; let row=[], f='', q=false;
+  for (let i=0;i<text.length;i++){
+    const c=text[i];
+    if (q){ if(c==='"'){ if(text[i+1]==='"'){f+='"';i++;} else q=false; } else f+=c; }
+    else if (c==='"') q=true;
+    else if (c===','){ row.push(f); f=''; }
+    else if (c==='\n'){ row.push(f.replace(/\r$/,'')); rows.push(row); row=[]; f=''; }
+    else f+=c;
+  }
+  if (f || row.length){ row.push(f); rows.push(row); }
+  const head = rows.shift() || [];
+  return rows.filter(r=>r.length>1).map(r => Object.fromEntries(head.map((h,i)=>[h, r[i]])));
+}
+const nul = v => (v===undefined || v==='' ) ? null : v;
+const num = v => nul(v)==null ? null : +v;
+const bool = v => v==='True' || v==='true';
+function shape(kind, rows){
+  switch(kind){
+    case 'health_metric': return rows.map(r=>({day:r.day, metric:r.metric, source:r.source, value:+r.value, unit:nul(r.unit), is_primary:bool(r.is_primary)}));
+    case 'sleep_night': return rows.map(r=>({night:r.night, source:r.source, bedtime:nul(r.bedtime), wake_time:nul(r.wake_time),
+      in_bed_min:num(r.in_bed_min), asleep_min:num(r.asleep_min), awake_min:num(r.awake_min), deep_min:num(r.deep_min), rem_min:num(r.rem_min), core_min:num(r.core_min), is_primary:bool(r.is_primary)}));
+    case 'workout': return rows.map(r=>({started_at:r.started_at, activity:r.activity, duration_min:num(r.duration_min), distance_mi:num(r.distance_mi), active_kcal:num(r.active_kcal), source:nul(r.source)}));
+    case 'cpap_session': return rows.map(r=>({night:r.night, usage_hours:num(r.usage_hours), ahi:num(r.ahi), leak_50:num(r.leak_50), leak_95:num(r.leak_95), myair_score:num(r.myair_score), mask_on_off:num(r.mask_on_off), mode:nul(r.mode)}));
+    case 'myair_raw': {
+      const by = {};
+      for (const r of rows){ if (r.EVENTNAME==='REMOVE' || !r.SESSION_DATE) continue;
+        const o = by[r.SESSION_DATE]; if (!o || (r.APPROXIMATECREATIONDATETIME||'') > (o.APPROXIMATECREATIONDATETIME||'')) by[r.SESSION_DATE]=r; }
+      return Object.values(by).map(r=>({night:r.SESSION_DATE, usage_hours:num(r.USAGE_HOURS)!=null?Math.round(r.USAGE_HOURS*100)/100:null, ahi:num(r.AHI), leak_50:num(r.LEAK_50_PERCENTILE), leak_95:num(r.LEAK_95_PERCENTILE), myair_score:num(r.SLEEP_SCORE), mask_on_off:num(r.MASK_SESSION_COUNT), mode:nul(r.MODE)}));
+    }
+  }
+}
+const CONFLICT = {health_metric:'user_id,day,metric,source', sleep_night:'user_id,night,source', workout:'user_id,started_at,activity', cpap_session:'user_id,night', clinical_record:'user_id,resource_type,resource_id'};
+function kindOf(name, firstLine){
+  if (/SESSION_DATE/.test(firstLine)) return 'myair_raw';
+  for (const k of ['health_metric','sleep_night','workout','cpap_session','clinical_record']) if (name.startsWith(k)) return k;
+  return null;
+}
+async function runImport(files){
+  const log = $('#log'), bar = $('#bar'); log.hidden = bar.hidden = false; log.textContent = '';
+  const say = s => { log.textContent += s + '\n'; log.scrollTop = log.scrollHeight; };
+  const setBar = p => bar.firstElementChild.style.width = (p*100).toFixed(1)+'%';
+  for (const file of files){
+    const text = await file.text();
+    const kind = kindOf(file.name, text.slice(0, 2000));
+    if (!kind){ say(`⚠️ ${file.name}: not recognized, skipped`); continue; }
+    let rows;
+    if (kind==='clinical_record') rows = text.split('\n').filter(Boolean).map(l=>JSON.parse(l));
+    else rows = shape(kind, parseCSV(text));
+    const table = kind==='myair_raw' ? 'cpap_session' : kind;
+    { const keys = CONFLICT[table].split(',').filter(k=>k!=='user_id'), m = new Map();
+      for (const r of rows) m.set(keys.map(k=>r[k]).join('|'), r);   // last copy wins; avoids duplicate keys in one batch
+      rows = [...m.values()]; }
+    const dates = rows.map(r=>r.day||r.night||r.recorded_on||(r.started_at||'').slice(0,10)).filter(Boolean).sort();
+    const { data: batch, error: be } = await sb.from('import_batch').insert({ user_id:user.id, source: kind==='myair_raw'?'myair':'apple_health_export', file_name:file.name, record_count:rows.length, date_from:dates[0]||null, date_to:dates.at(-1)||null, status:'running' }).select('id').single();
+    if (be){ say(`❌ ${file.name}: ${be.message}`); continue; }
+    say(`${file.name} → ${table}: ${rows.length.toLocaleString()} rows`);
+    const size = table==='clinical_record' ? 100 : 1000; let done = 0, failed = 0;
+    for (let i=0;i<rows.length;i+=size){
+      const chunk = rows.slice(i,i+size).map(r=>({...r, user_id:user.id, import_batch_id:batch.id}));
+      let { error } = await sb.from(table).upsert(chunk, { onConflict: CONFLICT[table] });
+      if (error){ await new Promise(r=>setTimeout(r,1200)); ({ error } = await sb.from(table).upsert(chunk, { onConflict: CONFLICT[table] })); }
+      if (error){ failed += chunk.length; say(`  ❌ rows ${i}–${i+chunk.length}: ${error.message}`); }
+      done += chunk.length; setBar(done/rows.length);
+    }
+    await sb.from('import_batch').update({ status: failed ? 'partial' : 'done' }).eq('id', batch.id);
+    say(failed ? `  ⚠️ done with ${failed} failed rows` : `  ✅ done`);
+  }
+  say('Finished.'); refreshCounts();
+}
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+init();
+</script>
+</body>
+</html>
