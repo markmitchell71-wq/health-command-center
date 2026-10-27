@@ -69,6 +69,15 @@ table.counts td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 .spark i{flex:1;background:var(--accent-soft);border-radius:3px 3px 0 0;min-height:2px}
 .spark i.last{background:var(--accent)}
 .note{font-size:12px;color:var(--muted);margin-top:10px}
+table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin-top:12px;font-variant-numeric:tabular-nums}
+table.cmp th{font-size:11px;font-weight:600;color:var(--muted);text-align:right;padding:4px 0;text-transform:uppercase;letter-spacing:.04em}
+table.cmp td{padding:7px 0;border-top:1px solid var(--line);text-align:right}
+table.cmp td:first-child,table.cmp th:first-child{text-align:left}
+table.cmp tr.lead td{font-weight:600}
+.scroll{overflow-x:auto}
+table.cmp.tight{font-size:13px}
+table.cmp.tight td,table.cmp.tight th{white-space:nowrap;padding-left:10px}
+table.cmp.tight td:first-child,table.cmp.tight th:first-child{padding-left:0}
 </style>
 </head>
 <body>
@@ -82,7 +91,7 @@ table.counts td:last-child{text-align:right;font-variant-numeric:tabular-nums}
 </div></nav>
 
 <script>
-const VERSION = '0.1.0';
+const VERSION = '0.2.0';
 const SB_URL = 'https://wwmcugtxyuvkxwurirgu.supabase.co';
 const SB_KEY = 'sb_publishable_uQJ27EvPPtgnBLLLdX5HZA_Q96ho4ZZ';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
@@ -133,6 +142,29 @@ function showTab(t){
   window.scrollTo(0,0);
 }
 
+/* ---------- sleep: CPAP is the duration of record; ring + Sleep Cycle for comparison/stages ---------- */
+const hmm = m => m==null ? '—' : `${Math.floor(Math.round(m)/60)}:${String(Math.round(m)%60).padStart(2,'0')}`;
+const hm = m => m==null ? '—' : `${Math.floor(m/60)}<small>h</small> ${String(Math.round(m%60)).padStart(2,'0')}<small>m</small>`;
+function sleepNights(S, C){
+  const by = {};
+  for (const c of C) (by[c.night] ??= {night:c.night}).cpap = c;
+  for (const s of S) (by[s.night] ??= {night:s.night})[s.source] = s;
+  return Object.values(by).map(n => {
+    const fb = ['oura','sleep_cycle','watch'].find(k => n[k]?.asleep_min >= 60);
+    n.duration = n.cpap?.usage_hours ? Math.round(n.cpap.usage_hours*60) : (fb ? n[fb].asleep_min : null);
+    n.durationSrc = n.cpap?.usage_hours ? 'cpap' : fb;
+    return n;
+  }).sort((a,b) => b.night.localeCompare(a.night));
+}
+function sleepCompare(n){
+  const rows = [['oura','Oura ring'],['sleep_cycle','Sleep Cycle'],['watch','Apple Watch']].filter(([k])=>n[k]);
+  if (!rows.length) return `<p class="note">No ring or Sleep Cycle data for this night.</p>`;
+  return `<table class="cmp"><tr><th></th><th>Asleep</th><th>Deep</th><th>REM</th></tr>
+    ${n.cpap ? `<tr class="lead"><td>CPAP (mask on)</td><td>${fmtMin(n.duration)}</td><td>—</td><td>—</td></tr>`:''}
+    ${rows.map(([k,l])=>`<tr><td>${l}</td><td>${fmtMin(n[k].asleep_min)}</td><td>${n[k].deep_min!=null?n[k].deep_min+'m':'—'}</td><td>${n[k].rem_min!=null?n[k].rem_min+'m':'—'}</td></tr>`).join('')}
+  </table><p class="note">Ring and Sleep Cycle sleep is an estimate; deep and REM are estimates.</p>`;
+}
+
 /* ---------- today ---------- */
 async function loadToday(){
   const el = $('#v-today'), today = localDay(), h = new Date().getHours();
@@ -143,14 +175,17 @@ async function loadToday(){
     <div class="empty">Loading…</div>`;
   const from14 = addDays(today,-14), from30 = addDays(today,-30);
   const [sleep, cpap, metrics, dr] = await Promise.all([
-    sb.from('sleep_night').select('night,source,asleep_min,bedtime,wake_time').eq('is_primary',true).gte('night',from14).order('night',{ascending:false}),
-    sb.from('cpap_session').select('night,usage_hours,ahi,myair_score').order('night',{ascending:false}).limit(7),
+    sb.from('sleep_night').select('night,source,asleep_min,deep_min,rem_min').gte('night',from14).order('night',{ascending:false}),
+    sb.from('cpap_session').select('night,usage_hours,ahi,myair_score').gte('night',from14).order('night',{ascending:false}),
     sb.from('health_metric').select('day,metric,value,source').eq('is_primary',true).in('metric',['steps','resting_hr','weight_lb','exercise_min']).gte('day',from30).order('day',{ascending:false}),
     sb.from('daily_record').select('mood,energy').eq('day',today).maybeSingle()
   ]);
   const M = k => (metrics.data||[]).filter(r=>r.metric===k);
   const S = sleep.data||[], C = cpap.data||[];
-  const lastSleep = S[0], sleep7 = avg(S.filter(r=>r.night>addDays(today,-8)).map(r=>r.asleep_min));
+  const N = sleepNights(S, C);               // merged per-night view, newest first
+  const lastN = N[0];
+  const sleep7 = avg(N.filter(n=>n.night>addDays(today,-8) && n.duration!=null).map(n=>n.duration));
+  const nightLabel = d => d===today ? 'Last night' : 'Night ending '+new Date(d+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'});
   const steps = M('steps'), stepsToday = steps.find(r=>r.day===today);
   const steps7 = avg(steps.filter(r=>r.day<today && r.day>=addDays(today,-7)).map(r=>+r.value));
   const stepsPrev7 = avg(steps.filter(r=>r.day<addDays(today,-7) && r.day>=addDays(today,-14)).map(r=>+r.value));
@@ -161,15 +196,14 @@ async function loadToday(){
   const mood = dr.data?.mood, energy = dr.data?.energy;
   el.querySelector('.empty').outerHTML = `
     ${hasData ? '' : `<div class="card"><h3>No data yet</h3><p class="empty">Go to <b>Me → Import</b> to load your Apple Health history.</p></div>`}
+    <div class="card"><h3>😴 Sleep</h3>
+      ${lastN ? `
+        <div class="big">${hm(lastN.duration)}</div>
+        <div class="sub">${nightLabel(lastN.night)} · ${lastN.durationSrc==='cpap' ? 'CPAP mask-on time' : (SRC[lastN.durationSrc]||lastN.durationSrc)+' (no CPAP data)'}${sleep7?` · 7-day ${fmtMin(sleep7)}`:''}</div>
+        ${lastN.cpap ? `<div class="src">AHI ${lastN.cpap.ahi} · myAir score ${lastN.cpap.myair_score}</div>`:''}
+        ${sleepCompare(lastN)}` : '<p class="empty">No recent sleep</p>'}
+    </div>
     <div class="grid">
-      <div class="card"><h3>😴 Sleep</h3>
-        <div class="big">${lastSleep ? `${Math.floor(lastSleep.asleep_min/60)}<small>h</small> ${String(lastSleep.asleep_min%60).padStart(2,'0')}<small>m</small>` : '—'}</div>
-        <div class="sub">${lastSleep ? (lastSleep.night===today ? 'Last night' : 'Night of '+new Date(lastSleep.night+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})) : 'No recent sleep'}${sleep7?` · 7-day ${fmtMin(sleep7)}`:''}</div>
-        ${lastSleep ? `<div class="src">${SRC[lastSleep.source]||lastSleep.source}</div>`:''}</div>
-      <div class="card"><h3>🫁 CPAP</h3>
-        <div class="big">${C[0] ? (+C[0].usage_hours).toFixed(1)+'<small>h</small>' : '—'}</div>
-        <div class="sub">${C[0] ? `AHI ${C[0].ahi} · score ${C[0].myair_score}` : 'Upload myAir in Me'}</div>
-        ${C[0] ? `<div class="src">${new Date(C[0].night+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})} · myAir</div>`:''}</div>
       <div class="card"><h3>🚶 Steps</h3>
         <div class="big">${fmtNum(stepsToday?.value)}</div>
         <div class="sub">7-day avg ${fmtNum(steps7)} ${sp!=null?`<span class="chip ${sp<0?'dn':''}">${sp>0?'↑':sp<0?'↓':''} ${Math.abs(sp)}%</span>`:''}</div></div>
@@ -199,18 +233,42 @@ async function loadTrends(){
   const el = $('#v-trends'), today = localDay(), from = addDays(today,-30);
   el.innerHTML = `<header class="top"><div class="hello">Trends</div></header><div class="empty">Loading…</div>`;
   const [sl, st, cp] = await Promise.all([
-    sb.from('sleep_night').select('night,asleep_min').eq('is_primary',true).gte('night',from).order('night'),
+    sb.from('sleep_night').select('night,source,asleep_min,deep_min,rem_min').gte('night',from).order('night'),
     sb.from('health_metric').select('day,value').eq('metric','steps').eq('is_primary',true).gte('day',from).order('day'),
-    sb.from('cpap_session').select('night,usage_hours').gte('night',from).order('night')
+    sb.from('cpap_session').select('night,usage_hours,ahi,myair_score').gte('night',from).order('night')
   ]);
-  const spark = (rows, key) => { const v = rows.map(r=>+r[key]); const mx = Math.max(...v,1);
+  const N = sleepNights(sl.data||[], cp.data||[]).reverse();
+  const spark = (v) => { const mx = Math.max(...v,1);
     return `<div class="spark">${v.map((x,i)=>`<i class="${i===v.length-1?'last':''}" style="height:${Math.max(4,x/mx*100)}%"></i>`).join('')}</div>`; };
-  const card = (title, rows, key, fmt) => `<div class="card"><h3>${title} · last 30 days</h3>
-    ${rows.length ? `<div class="big">${fmt(avg(rows.map(r=>+r[key])))}</div><div class="sub">average · ${rows.length} days with data</div>${spark(rows,key)}` : '<p class="empty">No data yet</p>'}</div>`;
-  el.querySelector('.empty').outerHTML =
-    card('😴 Sleep', sl.data||[], 'asleep_min', fmtMin) +
-    card('🫁 CPAP use', cp.data||[], 'usage_hours', v=>v.toFixed(1)+'<small>h</small>') +
-    card('🚶 Steps', st.data||[], 'value', fmtNum) +
+  const dur = N.filter(n=>n.duration!=null);
+  // cross-check: per source averages + gap vs CPAP on shared nights
+  const srcs = [['cpap','CPAP'],['oura','Oura'],['sleep_cycle','Sleep Cycle'],['watch','Apple Watch']];
+  const val = (n,k) => k==='cpap' ? (n.cpap?.usage_hours ? n.cpap.usage_hours*60 : null) : (n[k]?.asleep_min ?? null);
+  const stat = k => {
+    const v = N.map(n=>val(n,k)).filter(x=>x!=null);
+    const shared = N.filter(n=>val(n,k)!=null && n.cpap?.usage_hours && k!=='cpap');
+    const gap = shared.length ? avg(shared.map(n=>val(n,k)-n.cpap.usage_hours*60)) : null;
+    const deep = avg(N.map(n=>n[k]?.deep_min).filter(x=>x!=null)), rem = avg(N.map(n=>n[k]?.rem_min).filter(x=>x!=null));
+    return {k, n:v.length, a:avg(v), gap, deep, rem};
+  };
+  const rows = srcs.map(([k,l])=>({...stat(k), l})).filter(r=>r.n);
+  const fmtGap = g => g==null ? '—' : (g<0?'−':'+')+hmm(Math.abs(g));
+  const cross = `<div class="card"><h3>😴 Sleep cross-check · last 30 days</h3>
+    ${dur.length ? `<div class="big">${hm(avg(dur.map(n=>n.duration)))}</div><div class="sub">average nightly sleep (CPAP mask-on time when available) · ${dur.length} nights</div>${spark(dur.map(n=>n.duration))}` : '<p class="empty">No sleep data yet</p>'}
+    ${rows.length ? `<div class="scroll"><table class="cmp tight"><tr><th>Source</th><th>Nts</th><th>Avg</th><th>vs CPAP</th><th>Deep</th><th>REM</th></tr>
+      ${rows.map(r=>`<tr class="${r.k==='cpap'?'lead':''}"><td>${r.l}</td><td>${r.n}</td><td>${hmm(r.a)}</td><td>${r.k==='cpap'?'—':fmtGap(r.gap)}</td><td>${r.deep!=null?Math.round(r.deep)+'m':'—'}</td><td>${r.rem!=null?Math.round(r.rem)+'m':'—'}</td></tr>`).join('')}
+    </table></div><p class="note">"vs CPAP" compares the same nights only. Mask-on time includes time awake with the mask on, so the ring and Sleep Cycle usually read lower.</p>`:''}
+  </div>`;
+  const recent = N.slice(-14).reverse();
+  const nightsTable = recent.length ? `<div class="card"><h3>Night by night</h3><div class="scroll"><table class="cmp tight">
+    <tr><th>Night</th><th>CPAP</th><th>Oura</th><th>Cycle</th><th>Deep*</th><th>REM*</th></tr>
+    ${recent.map(n=>{ const st = n.oura || n.sleep_cycle || {}; return `<tr><td>${new Date(n.night+'T12:00').toLocaleDateString('en-US',{month:'short',day:'numeric'})}</td>
+      <td>${n.cpap?.usage_hours?hmm(n.cpap.usage_hours*60):'—'}</td><td>${n.oura?hmm(n.oura.asleep_min):'—'}</td><td>${n.sleep_cycle?hmm(n.sleep_cycle.asleep_min):'—'}</td>
+      <td>${st.deep_min!=null?st.deep_min+'m':'—'}</td><td>${st.rem_min!=null?st.rem_min+'m':'—'}</td></tr>`; }).join('')}
+  </table></div><p class="note">Times in h:mm. Cycle = Sleep Cycle. *Deep/REM from Oura when available, otherwise Sleep Cycle. Nights are dated by the morning you woke up.</p></div>` : '';
+  const stv = (st.data||[]).map(r=>+r.value);
+  el.querySelector('.empty').outerHTML = cross + nightsTable +
+    `<div class="card"><h3>🚶 Steps · last 30 days</h3>${stv.length?`<div class="big">${fmtNum(avg(stv))}</div><div class="sub">average · ${stv.length} days</div>${spark(stv)}`:'<p class="empty">No data yet</p>'}</div>` +
     `<p class="note">Fuller 7/30/90-day and 1-year views and the weekly summary arrive in Phase 4.</p>`;
 }
 
@@ -269,12 +327,13 @@ function shape(kind, rows){
     case 'sleep_night': return rows.map(r=>({night:r.night, source:r.source, bedtime:nul(r.bedtime), wake_time:nul(r.wake_time),
       in_bed_min:num(r.in_bed_min), asleep_min:num(r.asleep_min), awake_min:num(r.awake_min), deep_min:num(r.deep_min), rem_min:num(r.rem_min), core_min:num(r.core_min), is_primary:bool(r.is_primary)}));
     case 'workout': return rows.map(r=>({started_at:r.started_at, activity:r.activity, duration_min:num(r.duration_min), distance_mi:num(r.distance_mi), active_kcal:num(r.active_kcal), source:nul(r.source)}));
-    case 'cpap_session': return rows.map(r=>({night:r.night, usage_hours:num(r.usage_hours), ahi:num(r.ahi), leak_50:num(r.leak_50), leak_95:num(r.leak_95), myair_score:num(r.myair_score), mask_on_off:num(r.mask_on_off), mode:nul(r.mode)}));
+    // cpap_session.csv 'night' column holds the myAir session date (evening); wake date = +1
+    case 'cpap_session': return rows.map(r=>{ const sd = r.session_date || r.night; return {night:addDays(sd,1), session_date:sd, usage_hours:num(r.usage_hours), ahi:num(r.ahi), leak_50:num(r.leak_50), leak_95:num(r.leak_95), myair_score:num(r.myair_score), mask_on_off:num(r.mask_on_off), mode:nul(r.mode)}; });
     case 'myair_raw': {
       const by = {};
       for (const r of rows){ if (r.EVENTNAME==='REMOVE' || !r.SESSION_DATE) continue;
         const o = by[r.SESSION_DATE]; if (!o || (r.APPROXIMATECREATIONDATETIME||'') > (o.APPROXIMATECREATIONDATETIME||'')) by[r.SESSION_DATE]=r; }
-      return Object.values(by).map(r=>({night:r.SESSION_DATE, usage_hours:num(r.USAGE_HOURS)!=null?Math.round(r.USAGE_HOURS*100)/100:null, ahi:num(r.AHI), leak_50:num(r.LEAK_50_PERCENTILE), leak_95:num(r.LEAK_95_PERCENTILE), myair_score:num(r.SLEEP_SCORE), mask_on_off:num(r.MASK_SESSION_COUNT), mode:nul(r.MODE)}));
+      return Object.values(by).map(r=>({night:addDays(r.SESSION_DATE,1), session_date:r.SESSION_DATE, usage_hours:num(r.USAGE_HOURS)!=null?Math.round(r.USAGE_HOURS*100)/100:null, ahi:num(r.AHI), leak_50:num(r.LEAK_50_PERCENTILE), leak_95:num(r.LEAK_95_PERCENTILE), myair_score:num(r.SLEEP_SCORE), mask_on_off:num(r.MASK_SESSION_COUNT), mode:nul(r.MODE)}));
     }
   }
 }
