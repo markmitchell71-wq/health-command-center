@@ -91,7 +91,7 @@ table.cmp.tight td:first-child,table.cmp.tight th:first-child{padding-left:0}
 </div></nav>
 
 <script>
-const VERSION = '0.2.0';
+const VERSION = '0.3.0';
 const SB_URL = 'https://wwmcugtxyuvkxwurirgu.supabase.co';
 const SB_KEY = 'sb_publishable_uQJ27EvPPtgnBLLLdX5HZA_Q96ho4ZZ';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
@@ -165,6 +165,12 @@ function sleepCompare(n){
   </table><p class="note">Ring and Sleep Cycle sleep is an estimate; deep and REM are estimates.</p>`;
 }
 
+async function latestWeight(){
+  const b = (await sb.from('body_measurement').select('measured_at,value,source').eq('kind','weight').order('measured_at',{ascending:false}).limit(1)).data?.[0];
+  if (b) return { day: localDay(new Date(b.measured_at)), value: b.value, source: b.source };
+  return (await sb.from('health_metric').select('day,value,source').eq('metric','weight_lb').eq('is_primary',true).order('day',{ascending:false}).limit(1)).data?.[0];
+}
+
 /* ---------- today ---------- */
 async function loadToday(){
   const el = $('#v-today'), today = localDay(), h = new Date().getHours();
@@ -189,7 +195,7 @@ async function loadToday(){
   const steps = M('steps'), stepsToday = steps.find(r=>r.day===today);
   const steps7 = avg(steps.filter(r=>r.day<today && r.day>=addDays(today,-7)).map(r=>+r.value));
   const stepsPrev7 = avg(steps.filter(r=>r.day<addDays(today,-7) && r.day>=addDays(today,-14)).map(r=>+r.value));
-  const rhr = M('resting_hr')[0], wt = (await sb.from('health_metric').select('day,value,source').eq('metric','weight_lb').eq('is_primary',true).order('day',{ascending:false}).limit(1)).data?.[0];
+  const rhr = M('resting_hr')[0], wt = await latestWeight();
   const pct = (a,b) => (a!=null&&b) ? Math.round((a-b)/b*100) : null;
   const sp = pct(steps7, stepsPrev7);
   const hasData = S.length || C.length || steps.length;
@@ -286,7 +292,7 @@ async function loadCare(){
 }
 
 /* ---------- me + importer ---------- */
-const TABLES = ['health_metric','sleep_night','workout','cpap_session','clinical_record','daily_record'];
+const TABLES = ['health_metric','sleep_night','body_measurement','workout','cpap_session','clinical_record','daily_record'];
 async function loadMe(){
   const el = $('#v-me');
   el.innerHTML = `<header class="top"><div><div class="hello">Me</div><div class="date">${esc(user.email)}</div></div><div class="ver">v${VERSION}</div></header>
@@ -326,6 +332,7 @@ function shape(kind, rows){
     case 'health_metric': return rows.map(r=>({day:r.day, metric:r.metric, source:r.source, value:+r.value, unit:nul(r.unit), is_primary:bool(r.is_primary)}));
     case 'sleep_night': return rows.map(r=>({night:r.night, source:r.source, bedtime:nul(r.bedtime), wake_time:nul(r.wake_time),
       in_bed_min:num(r.in_bed_min), asleep_min:num(r.asleep_min), awake_min:num(r.awake_min), deep_min:num(r.deep_min), rem_min:num(r.rem_min), core_min:num(r.core_min), is_primary:bool(r.is_primary)}));
+    case 'body_measurement': return rows.map(r=>({measured_at:r.measured_at, kind:r.kind, value:+r.value, value2:num(r.value2), unit:nul(r.unit), source:r.source}));
     case 'workout': return rows.map(r=>({started_at:r.started_at, activity:r.activity, duration_min:num(r.duration_min), distance_mi:num(r.distance_mi), active_kcal:num(r.active_kcal), source:nul(r.source)}));
     // cpap_session.csv 'night' column holds the myAir session date (evening); wake date = +1
     case 'cpap_session': return rows.map(r=>{ const sd = r.session_date || r.night; return {night:addDays(sd,1), session_date:sd, usage_hours:num(r.usage_hours), ahi:num(r.ahi), leak_50:num(r.leak_50), leak_95:num(r.leak_95), myair_score:num(r.myair_score), mask_on_off:num(r.mask_on_off), mode:nul(r.mode)}; });
@@ -337,10 +344,10 @@ function shape(kind, rows){
     }
   }
 }
-const CONFLICT = {health_metric:'user_id,day,metric,source', sleep_night:'user_id,night,source', workout:'user_id,started_at,activity', cpap_session:'user_id,night', clinical_record:'user_id,resource_type,resource_id'};
+const CONFLICT = {health_metric:'user_id,day,metric,source', sleep_night:'user_id,night,source', workout:'user_id,started_at,activity', cpap_session:'user_id,night', clinical_record:'user_id,resource_type,resource_id', body_measurement:'user_id,kind,measured_at,source'};
 function kindOf(name, firstLine){
   if (/SESSION_DATE/.test(firstLine)) return 'myair_raw';
-  for (const k of ['health_metric','sleep_night','workout','cpap_session','clinical_record']) if (name.startsWith(k)) return k;
+  for (const k of ['health_metric','sleep_night','workout','cpap_session','clinical_record','body_measurement']) if (name.startsWith(k)) return k;
   return null;
 }
 async function runImport(files){
@@ -358,7 +365,7 @@ async function runImport(files){
     { const keys = CONFLICT[table].split(',').filter(k=>k!=='user_id'), m = new Map();
       for (const r of rows) m.set(keys.map(k=>r[k]).join('|'), r);   // last copy wins; avoids duplicate keys in one batch
       rows = [...m.values()]; }
-    const dates = rows.map(r=>r.day||r.night||r.recorded_on||(r.started_at||'').slice(0,10)).filter(Boolean).sort();
+    const dates = rows.map(r=>r.day||r.night||r.recorded_on||(r.started_at||r.measured_at||'').slice(0,10)).filter(Boolean).sort();
     const { data: batch, error: be } = await sb.from('import_batch').insert({ user_id:user.id, source: kind==='myair_raw'?'myair':'apple_health_export', file_name:file.name, record_count:rows.length, date_from:dates[0]||null, date_to:dates.at(-1)||null, status:'running' }).select('id').single();
     if (be){ say(`❌ ${file.name}: ${be.message}`); continue; }
     say(`${file.name} → ${table}: ${rows.length.toLocaleString()} rows`);
