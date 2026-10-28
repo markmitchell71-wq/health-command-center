@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Outlive the Group Chat</title>
+<title>Operation: Outlive the Group Chat</title>
 <meta name="theme-color" content="#F4F1EA">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -26,6 +26,8 @@ header.top{display:flex;justify-content:space-between;align-items:flex-end;margi
 .hello{font:600 28px/1.1 "New York","Iowan Old Style",Georgia,serif;letter-spacing:-.01em}
 .date{color:var(--muted);font-size:14px;margin-top:4px}
 .ver{font-size:11px;color:var(--muted)}
+.apptitle{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.apptitle span{font-weight:500;color:var(--muted);letter-spacing:0;text-transform:none}
 .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:12px}
 .card h3{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:10px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
@@ -91,7 +93,7 @@ table.cmp.tight td:first-child,table.cmp.tight th:first-child{padding-left:0}
 </div></nav>
 
 <script>
-const VERSION = '0.3.0';
+const VERSION = '1.4';
 const SB_URL = 'https://wwmcugtxyuvkxwurirgu.supabase.co';
 const SB_KEY = 'sb_publishable_uQJ27EvPPtgnBLLLdX5HZA_Q96ho4ZZ';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
@@ -176,7 +178,8 @@ async function loadToday(){
   const el = $('#v-today'), today = localDay(), h = new Date().getHours();
   const greet = h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : 'Good evening';
   const name = (user.user_metadata?.full_name || '').split(' ')[0] || '';
-  el.innerHTML = `<header class="top"><div><div class="hello">${greet}${name?', '+esc(name):''}</div>
+  el.innerHTML = `<div class="apptitle">Operation: Outlive the Group Chat<span>v${VERSION}</span></div>
+    <header class="top"><div><div class="hello">${greet}${name?', '+esc(name):''}</div>
     <div class="date">${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div></div></header>
     <div class="empty">Loading…</div>`;
   const from14 = addDays(today,-14), from30 = addDays(today,-30);
