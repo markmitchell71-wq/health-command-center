@@ -77,6 +77,48 @@ table.cmp td{padding:7px 0;border-top:1px solid var(--line);text-align:right}
 table.cmp td:first-child,table.cmp th:first-child{text-align:left}
 table.cmp tr.lead td{font-weight:600}
 .scroll{overflow-x:auto}
+.steps{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.steps span{font-size:12px;padding:3px 9px;border-radius:99px;background:var(--bg);color:var(--muted)}
+.steps span.ok{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.sec{font-size:13px;font-weight:700;margin:16px 0 8px;color:var(--ink)}
+.slot{margin-bottom:8px}
+.slot .sl{font-size:11px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em}
+.dose{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:10px 12px;border-radius:12px;background:var(--bg);margin-bottom:6px;transition:background .15s}
+.dose .ck{width:26px;height:26px;flex:none;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-weight:800;color:#fff}
+.dose .dn{flex:1;font-size:15px}.dose .dn em{font-style:normal;color:var(--muted);font-size:13px}
+.dose .ds{font-size:12px;color:var(--muted);white-space:nowrap}
+.dose.taken,.dose.taken_late{background:var(--accent-soft)}
+.dose.taken .ck,.dose.taken_late .ck{background:var(--accent);border-color:var(--accent)}
+.dose.taken_late .ds{color:var(--warm)}
+.dose.skipped{opacity:.6}.dose.skipped .ck{background:var(--muted);border-color:var(--muted)}
+.dose.overdue .ds{color:var(--warm);font-weight:600}
+.mtypes{display:flex;gap:6px;margin-bottom:8px}
+.mtypes button{flex:1;padding:7px 0;border-radius:10px;background:var(--bg);font-size:13px}
+.mtypes button.on{background:var(--deep);color:#fff;font-weight:600}
+.mline{display:flex;gap:8px;align-items:center}
+.mline input{flex:1;min-width:0;font:inherit;font-size:16px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink)}
+.rates{display:flex;gap:4px}.rates button{font-size:22px;width:38px;height:42px;border-radius:10px;background:var(--bg)}
+.btn.sm{width:auto;padding:9px 14px;font-size:14px}
+.list{list-style:none;margin-top:8px}
+.list li{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line);font-size:14px}
+.list li i{font-style:normal;color:var(--muted);font-size:12px}
+.tag{font-style:normal;font-size:11px;padding:1px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-right:4px}
+.x{color:var(--muted);font-size:18px;padding:0 6px}
+.medrow{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.medrow:first-of-type{border-top:0}
+.medact{display:flex;gap:6px;align-items:center}.medact .x{font-size:13px}
+.mform{margin-top:12px;display:grid;gap:10px;background:var(--bg);padding:12px;border-radius:14px}
+.mform label{display:grid;gap:4px;font-size:12px;color:var(--muted)}
+.mform input:not([type=checkbox]){font:inherit;font-size:16px;padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+.flab{font-size:12px;color:var(--muted)}
+.fslot{display:flex;justify-content:space-between;align-items:center}
+.fslot .chk{display:flex;flex-direction:row;align-items:center;gap:8px;font-size:15px;color:var(--ink)}
+.fslot input[type=time]{width:130px}
+details.card summary{font-size:14px}
+details.ci > summary{list-style:none;cursor:pointer}
+details.ci > summary::-webkit-details-marker{display:none}
+details.ci > summary h3{margin-bottom:8px}
+
 .banner{position:relative;margin:calc(-1 * (env(safe-area-inset-top) + 18px)) -16px 14px;padding:calc(env(safe-area-inset-top) + 22px) 18px 34px;
   background:radial-gradient(120% 90% at 85% 0%,#2A9D8F 0%,transparent 60%),linear-gradient(160deg,#0B3954 0%,#0E5E73 55%,#0E7C86 100%);
   display:flex;align-items:center;gap:12px;color:#fff;overflow:hidden}
@@ -176,7 +218,7 @@ table.cmp.tight td:first-child,table.cmp.tight th:first-child{padding-left:0}
 </div></nav>
 
 <script>
-const VERSION = '1.7';
+const VERSION = '2.0';
 const TURTLE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">   <defs>     <radialGradient id="tShell" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#7FD1B9"/><stop offset=".6" stop-color="#2A9D8F"/><stop offset="1" stop-color="#1D6F66"/></radialGradient>     <linearGradient id="tSkin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A8E6CF"/><stop offset="1" stop-color="#5CB89F"/></linearGradient>   </defs>   <g transform="rotate(-18 100 100)">     <!-- flippers -->     <path d="M62 78 C30 52 14 58 10 66 C28 74 44 86 58 98 Z" fill="url(#tSkin)"/>     <path d="M138 78 C170 52 186 58 190 66 C172 74 156 86 142 98 Z" fill="url(#tSkin)"/>     <path d="M70 138 C52 152 46 166 52 172 C62 162 74 154 84 146 Z" fill="url(#tSkin)"/>     <path d="M130 138 C148 152 154 166 148 172 C138 162 126 154 116 146 Z" fill="url(#tSkin)"/>     <!-- head -->     <ellipse cx="100" cy="42" rx="17" ry="20" fill="url(#tSkin)"/>     <circle cx="93" cy="37" r="2.6" fill="#0B3954"/><circle cx="107" cy="37" r="2.6" fill="#0B3954"/>     <!-- shell -->     <ellipse cx="100" cy="104" rx="46" ry="54" fill="url(#tShell)" stroke="#145A52" stroke-width="3"/>     <g fill="none" stroke="#C9F2E3" stroke-width="2.4" stroke-linejoin="round" opacity=".85">       <polygon points="100,78 116,88 116,108 100,118 84,108 84,88"/>       <path d="M100 78 L100 58 M116 88 L134 78 M116 108 L136 120 M100 118 L100 150 M84 108 L64 120 M84 88 L66 78"/>     </g>   </g> </svg> `;
 const FACE = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCACQAJADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD51EbCT90eO9STQySp97OO1V7BZJLgRqevWrepxvYyKM5z2p8rOuM01qKt6LeERZwTUduELs7nr0rPnbcQx60faCQAB0pi51cs3MJeQHnb600xb/kqy19GbMLtw/rVKAn7xOKBtpkRj8uTaae8a5BBrorLw1e65HK+kwi4CBVJJ24Y8n9K7jw18NZLq202aWLzXuXwYt2UVVPLFvfpUSqJBGnqeUeWysUwQ3THetLSLiezR50BMa/eYD7vsa+l7nwT4dN3ZW8WlfZp0Yr58S5DYHO7PbqM9auwfDSxstM1CGxaN7W8RRuZdxUDqw9TWDrxasbezad0fKd9qM09zvOeelU3aZX3MSFJ5Fes698JZ4HSazZ44UdhI9ycAAHjbx6Vx/jfRpNMmaJYWVEVSG65DDgn0zVxcZbGcoySbZyM8rs4Gc+2a6XwlrWp2sUlrBcMtueq1zMIPmAkEgVagnlikLRDAqqlNSjaxNGTjLmudFBrNzBqBQHIPvVPUdSlkvlY5wTWS8jBvMDfOe1Sl2eLcVJYViqFnodMpva5f1fW724iit5ZnaFeik8Cs63nd5wvUCo45w5PmjkU5MGUmKtFTUY8qRlFyqSu2FrObebetP1K9a8Klh0q9qmmpbz7IjVOWydF3dq1jUTRVbL61KTg1sZ7Cm4wKt/ZnPQVGYmBxjmqucjpTS1REvI5rb0jTxqMUaQwF51kUFd3DrnnjvVfQ9Iu9Y1KKysoJJriT7qoPzNfS3w8+Guk+FodN1bWoWbUgP3UQ+Zi/r7fSsqtVQRdOlKTtYj+HPgb+xrGC41FpIpUZpXUjau5ugAPXC8V2GpXFkqeRZ2w2j5kI+XGDnt71tPp0uobrjWZNoBzFbqegHIyaotHGZsRRIq44xXk167W57GGwykZFjrEOEaWTcwJXaxxtH9RXQWHiJiyLAlrJB03pIAR+FVDoVrcKd8SAMMHAqsfCxtQs9qiTqOsYOxiPY1iqrZtOhT7nceXDLYsoVTHIcHKiRPxHvXlvxI+HM+paVdvaxh42dGDb8lEB/8AHsdh1rShu76xugbSeUxg8xTDaT7ehrprTxJItoXeFHiIw2Dj2wa1pV7PU5qmFnFXWqPi/WNCutENz9utLmAA5jEqYJBJxWRA4SJvMGCea+nPjJbXN1oTS2oD2zfeikQFl7naR2x096+XLnIYqy7SPUYNetSqe0jc86cfZsbCR55yMrVyK8QylNvHTFU7VR82/wDClsgovlL/AHQelbJWMOdsutZOdzeWeenFSWFukUTfaCUf0NdlbPA9sGEakKK5LxS6+eDDwO4FPlsbS91XRv3+kO8jy7j61lSHf+6PUcVduNeMkBXByfasMy5ct3zmuGlGVrSPr8fjcI5XovfclljeFvUYqJSC2WGfYCrsdzFJCVl+9SaNbpea3ZW+SFluI0OBuOCwrZNnlYiMIpSpvQ+oPhZ4a0/wP4QgvbmFn13UYhPISBmFDyqD09632uopEjmnYiRTuJzzz2FW/Ezpt2QRuW4hjyOVVQB/SufeFI94YktxgDtXnYl+9cjBw5nzPqX7zUJ3LLCx8s9SetV4Zdiq33mB9agR9y/MhOB1zgVatnRGQ+ZEM9Qa4JpyPVilFWRag1ZQQGUrVy01URojYyFJUg9CCaY9lbXA3ssZXpkHFU7fTLaGcIJ5sHkBjVK6MJKE1qjdlubG62jaC56hhwaw/sP2e+llgwIpOJI+xrVitVgywmVvZlGcVAzhj8wyvqDTkRSSV7HL61pbMr6Y25rK5UmLHG31XPavlfxNpFxZa7fQNFKGSVgQ64I5r7IaZfLdXGSpyhPY9q8f+OFpCniSxu1Rd13aK7sB1YEj+VduEquPoZxy+OKrKnJ2ueA/Zph/A1N8mVTnYw967vy4mONgqlqwhihICjNdscQ27WN6/DUaUHPn2MWLUpobfy1PB4rLuJHnclyTV9VVlOQM1XwASK6ea585Xw7glqWXlAFSWyiU8itrTtDgu7JJWkAY1Q1+x/skDy3yGrkUk3yp6jcbLmZk3nEmEFd/8DtEh1b4hab9r2m1s915KCxAwgyPrz2rzeKUvKA3rX078DtPg1TS4tJvLVY7a0h86Zk+V5i2SQzdemPwrWcuVJMdGm6qcuiPRbvWbS9kkuYZUlVR8pBx35/WuL1LxFYWwk33EUkvOFDjOfwpPHugWs+hS2tj5lrDJkxQxtyo7YPf8a4HT47fSdMgiltYxIqDDbAWYkc5rjqRjJ7np0XOCSsdpZ+ONOWMLeINucAjk05vFOlvIXRZNq8E4IH15rzXUtatIRueFSD94qnK/pVT/hINsAa0llj7EZyD+BrFYdGv1mUXa56pF40D/u7aTdHnBI54q1/wlhEwdJG2AZ+bmvLdHu9Ru9Xs7W1it7kXKklWt9zEj6EVa8QzXGm66tpeada2yoheQDcCPT86HQV7XLWM0u4ntUGtNqSJsmiUkcqatpaEFWM6gdQQa8K0fUYkmYmOPn7rCZlI9uK6K31i7lkDW8pDA85lJFZyw76DWJVtEermPKPGy732lgfWvHvjdNGnieyiZsBLGMqD2zk12Vp4vXSrXz9didIITta4g+cDPcr1xXkPxyvoL/xbZXllcedDNYR4dRw2Cec/p+Fb4ei7NMmOPWGqqra5iCZN4wRnvWfra7sMGyBWbiVFDbjz3xTWMsx2l89q6lBJ3udOIzyNak6bjqxqqHBwarEbSRU08UkC8nmq6HIOetdEe587XqqaStqaUd1JBaCOKQg1XvGuL2APJuKg4yRxX1dD+z54ansISss4kwCzK/WuV+O2gaJ4P8NWtlYQqZJj5aYxkY/iNbewirtsxpz9o1E+bktXXleWx2619SfCm4ltrK78oBXi09ZbmTGWLsAFH5V892FmskkSHJZnVeOpyRX1XpOjLofhyV3AW91IxpJg5GEGAB+FcFaXMz2IYR4aDv8AaILxBLBFLJ8wVQCDXLNpDXFqhhQma3zEw28YB4/SuqmQiFQxARj371m6xqMttGEsmAkxywPA/DvXn8zvoehCCkrHAavahpHE8EY29nXafyrn4tNE11zEgjHfGAK7LVL3U78Yu0srhR/EQVYflWYsJv5Vs4mAfvFF8xPrzW0ZtLUxqUE3ojQ+FmixXOu3c100kcRAgg8olSB1Jz/hWf8AFTTSfF9tCskssD27IGkOWBB6Z716J4MS3kWKK1DRCHOM9eP/AK9Z3xHso7izhuYJM3MEmCTySD/+qohUtPmCph0ocqPHotENyBGryoy9x3rpNM0u4t1BilctxiMLk5+taEMdm7RudQjsrjoyyKSK7Xw5pNorecdTW/kPKxxnA/KtZ1tCIYVLUwbvw5cXVhawXCDdezorxsCcRg5YZ9xxWN+0U1kPEXhnT7O2t4ILeyyBEANilvu49OK9TjVm1uEsylI42CIP+WY7kn1Jrwj4/L9k+JEsZd2ZbeJhu7ZXsf6VVCTnocmMhGFmFzZ6dJYxINu8jFKdD0uxgS4LKzLyRmuJsb55FbzpCNo4qkb6Z7tkedzGT0JpKhPa5i68Vq0b3iOS0vcNAMADrXKIAM+malv3YP8Au2ODUMeSv1rsow5EcVaXM72PvC6v28L/AAvNzLMTcQ2mQ7nq2O9fHGt+INU8TXqy6tdPOy/dz0UV0fi/4war4i8NLo7wiGIgB2ByWrz60vhGxLV14iV9Im2WulGV6mh0NquyaEgElWBwOvWvqPUJpLnTtD8+HyD9mDmMc7Segr5T0q+W5v7eJVyXlVceuSK+s/FrvZyWNusZBjgRevTjp715k4uMXc+hxeIpVpwVN3Od1SfAZSQQDgc9q5bVLghgE474HSrmq3TzSHqAf51nXa7YwCMnH61xbGi91GFf3ErHYhJJ6AVLp0s+gk3CRNJLMuAe/wCHpWlbWltbOs13KDKTwO3sKv6rqOkzlfJk2ERHJI4UjgHPetUtNTllWXMLY+KJrCJHjtlUPyQeoNS6p4u0/ULa706SHN1NDnC9Qw5BFcFqVwsl3Ekc28c8IeP/ANdei/Dnw9YXcIvbtgJVX5NjDKnPf3OelTJRjqweIucnot4yfJdJHKPUrzWy0kTukkC+TKrAgocdK1fGnhKSykkvLBxJGHJeIDDJn27j3rn9PbzQnHzZ/Wpl36GtKqpLQ9I0m8S4LthTIFUZPH1rwj9o6bHxOm3owkFrCD82Rjb2r27wmu+JufmI79zmvn/42xvefE7WnEjSqsojUt2CqBj6A114Nas83HxlK3KtTgrmY7MoMVR3nIPetSe1dUCsKg+xMoywIFegrHmTo1L6rYQODH83Wlj6UNbFh8uTVuwsZbl0ihUs7HAFQ2optmnLUrNRSKjAEmoyB2qZI5JTtijd3J4VVJJ/Cu10v4Ya7e2aTy+RbyS/6q38wSzP35RSSo+tF9LswhTdSXLHc57wa0kXinSWhVmk+1RgKvViWHFfYfjJXuCZVjO1PkLf3fY1x/wx8N+EfBNib5Z1vvFCoVZp1CNbsRyqJ2I9eTXYwXa6vocO10YBmWQdMN1+v41z1ZKWh20ITovmkjzu8hiRQASSOfpVYxySTRoF3scHHeun1XTIy8nJQZwEHVv/AK1RadHaWLhIj5kx6cZx6nP1rj9lZnqSxS5bHFatoBvdQO4Mwi/2uAfT61k3XhO2S3NwDOob5eHOBXrMPhqR72OdQhijAcpuwoJHLMe59BUPiSOEyJFAoZEjGVUYA9BV6pnNCpFOzPE/7FmidfLuZAoOASK1NL07XNOH/EuvpC0h3KAMgf8A169Y8M+G7eSWWe/hjKbMjf8AwZHA+tdbpWh2lrEbiK2VcEfuyOAPWlKXc0dWC6HkFhqfiJb4NezmZ3KqUCYxj+frV42AtruUjgyEsAOBz1Neo33hyObWI71Y9situZSM4GOAB3FYdtpSXF1cxXSqY1YtGynJUH1H9KmUW0KjXjGTYvgrrHjlQxYhuOBz/SvmXxJfPqHiLUrwrgS3Mj8e7GvqTxjdW3g/wHqd9HH8wiMEWBnLNxXyTHqERjbeMk5rrow5IjpVoTqNuVi9aJHqFxHHgZzzWn4i0hIbZFiA3kdK5rTb1YLrzPu46VpT+IPOvYyxzGDzzTnGXMnHY9/CY3CToONa13oT2+gyLp/msByOld98F/BcuoXjXlxGPKGQuR3rkdY8QwfYY44CMnGRmvcfhH4l0m18OwB541cDkEjOa4sU6s4W2uGOeFw8f9m1kkeETSwaNdqgtptP08kBp7R/NWXB6Mx5xWBf6vdWOryT6VduLWRy8RDcqfr1FeseLtJeW5bTdTWC11W5B+y6hCuy3vP9iReit2z649a8X1Gz+wzzWlxG1vPGxWRGH3WHt2r1adaNRaHxeKwU8M73uu52Vh4rj8SmK18SXP2bVEwtlq2cFW7RzY+8p7N1Hfiuv8J+N9Q0HWpdK8TK8JZgjHAwrdn9wR3HWvC8E/eGccEetdvoWr22uafBofiCdYZ4hs0/UpP+WfpDKe6E9D/Cfas6tLqjbDYznXsqp9EzLbzGIxFZmb5hvbg+5/wqOGBvOkMkQEKcFR3PpXkPhvxRfeG9QOj+IUdGtzsVnPKemT3XHQ163ba9DeaVEIcKrncGj5LH1rBoupFx0O70945PKKoG3/O/semPy4rK8QwCbUI4rZFI2lgcdD05qhpWpCzVnYdV4XvurVt7hHV8kDzPuknnHespIzUrMn0XTxB5drcAtEQXZ2OMnsAO9dHFscnKgDOxueK5yGeNrlUUMUHV2PQDsK1Le6E8gjxsjj+bcx/pUqISk2T396sZcsRtjU4fvxXMwH7VqEktu4RCwPy4OCaXWr1pU+zwEsVBUMByfU1SvtQPh/TLrULaNZpVjytuMBpCB0A7+tbRjoTHyOJ/aS8TxrpFr4dtVImJE85UZX2Xr17185xxluNua3vFHiGbVtSvL2/JNxK5Zgeg9MVlaHcxNMFl6k1d5JE8sb2udRpvgTUrvQn1BbFzCBkHPJHqBXIzWJhLFsgA9692k+IC6b4QFrHBF5qx7FbPYj0rwu71I3Ty7v4iTXPh6tWcm5bGtaFOKST1KeVLYzV6OOSOLcjyKD6Eis+2VftKF/u7ua9W0q20e5sUDMmQOa2r1vZ20Jo03Uu7ntXizw5F4g0OezkwJQN8Ld0cdOf0NeA+N9OfWNBGrspXVtNkFnfju46JIffjafcV9RsF2nH5ivIfEenxw/EW705wFtdftTGR28wjKn/vpf1rkws3GVj3XFVqbpyPnIjBPr/OmY7H7hq9qVq9peTwSDbJG5Uj0IOD+tVcArnr6ivYTuj5KpB05OL6HV6PrVpq1lHoviaYRvGuyx1NhuMI/wCecvdo/Q9V+lXbDVNU8H6n9jvy4RcFQW3KB2ZT0KnsRXCMm4EDqORXR6F4gt5LFNI8RpJNp6ZEFwgzNZk/3c/eT1X8qyqU76o7sPilbkqnqeneLUukV5XbB6453fjXR6f4jJ5LgxgfLg968UubS88OSxOHS502cboLiI7opV9VPY+oPIrWsbl5NskLFeOBnjBrkneO53exiz2weIpGBcnCsQoPc1fi1JpHjjllZVOS+TyfQV5Ba3N6I0AZvlPY81rWjXtxJk+bgDls1n7RIpYZM9EfW4olURkyzxsVIHpWV4rtbnU/DNxq1pM63+lyLd2+DwwX7ykd+Kr6bYSGFDjaR0HUmukvI3sfCuokLwbaQFfXKms5Vm3obU6MadmeDeMtOsDdWt+Yc6dqMXnqE4aFujhfo3OPQ1yp8OXBuIxpEyXjsflQMFc+n1zXbzRC8+GFvOT+8sLxFXPZZEII+mVFcNKw8uMpkKudhHVG/un2r1aT5oanl5jTVGu+XZlTWbq+jmNpexTW8sfDRyqVYfgazndVQYyDXs/gnxEmvwxWGr2trqOoxxn7MbtA32xB96Bm6h+6t17Vsan8JNC8ZacmreCbg6fK2d9ncHMYYdUz1Ug8c8VnzxpuzE6EpQ9pB3R8/mQhRkVbsJ7hXVkdwvoK1PEnh660O/ex1S3e3uYjhlarWmC1FrggZArVRjNGdnF6n//Z';
 const banner = () => `<div class="banner"><div class="logo"><img src="${FACE}" alt="Mark"><span class="tbadge">${TURTLE}</span></div><div class="btxt"><div class="kicker">Operation:</div><div class="brand">Outlive the Group&nbsp;Chat</div></div><span class="vchip">v${VERSION}</span><svg class="wave" viewBox="0 0 400 40" preserveAspectRatio="none"><path d="M0 22 Q50 6 100 22 T200 22 T300 22 T400 22 V40 H0Z" fill="var(--bg)"/></svg></div>`;
@@ -216,7 +258,7 @@ function render(){
   app.innerHTML = `
     <section class="view on" id="v-today"></section>
     <section class="view" id="v-trends"></section>
-    <section class="view" id="v-meds"><div class="soon"><b>Meds</b>Medication list, one-tap tracking and adherence arrive in Phase 3.</div></section>
+    <section class="view" id="v-meds"></section>
     <section class="view" id="v-care"></section>
     <section class="view" id="v-me"></section>`;
   showTab(location.hash.slice(1) || 'today');
@@ -226,7 +268,7 @@ function showTab(t){
   if (!$('#v-'+t)) t = 'today';
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab===t));
   document.querySelectorAll('section.view').forEach(v => v.classList.toggle('on', v.id==='v-'+t));
-  ({today:loadToday, trends:loadTrends, care:loadCare, me:loadMe}[t]||(()=>{}))();
+  ({today:loadToday, trends:loadTrends, meds:loadMeds, care:loadCare, me:loadMe}[t]||(()=>{}))();
   window.scrollTo(0,0);
 }
 
@@ -257,6 +299,170 @@ async function latestWeight(){
   const b = (await sb.from('body_measurement').select('measured_at,value,source').eq('kind','weight').order('measured_at',{ascending:false}).limit(1)).data?.[0];
   if (b) return { day: localDay(new Date(b.measured_at)), value: b.value, source: b.source };
   return (await sb.from('health_metric').select('day,value,source').eq('metric','weight_lb').eq('is_primary',true).order('day',{ascending:false}).limit(1)).data?.[0];
+}
+
+/* ---------- 2.0 daily check-in: meds, meals, notes ---------- */
+const SLOTS = [['morning','☀️ Morning','08:00'],['midday','🌤️ Midday','12:00'],['evening','🌇 Evening','18:00'],['bedtime','🌙 Bedtime','22:00']];
+const slotLabel = k => (SLOTS.find(s=>s[0]===k)||[k,k])[1];
+const fmtTime = hhmm => { const [h,m] = (hhmm||'08:00').split(':').map(Number); const d = new Date(); d.setHours(h,m,0,0); return d.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}); };
+const minsNow = () => { const d = new Date(); return d.getHours()*60 + d.getMinutes(); };
+const toMins = hhmm => { const [h,m] = (hhmm||'0:0').split(':').map(Number); return h*60+m; };
+const NOTE_CATS = [['cpap',/cpap|mask|leak|airsense/i],['sleep',/sleep|tired|insomnia|nap|woke|bed/i],['pain',/pain|hurt|ache|sore|headache|migraine|knee|back|joint/i],
+  ['meds',/pill|med|dose|refill|prescription/i],['exercise',/walk|ride|bike|workout|gym|swim|hike|run/i],['food',/ate|eat|food|hungry|meal|snack|drink/i],
+  ['mood',/anxious|stress|sad|happy|mood|angry|calm|down/i],['energy',/energy|energetic|fatigue|sluggish|wired/i],['heart',/heart|palpitat|pulse|blood pressure|bp\b/i]];
+const noteCat = t => (NOTE_CATS.find(([,re])=>re.test(t))||['general'])[0];
+const MEAL_RATE = { good:'🟢', okay:'🟡', not_great:'🔴' };
+const defaultMeal = () => { const h = new Date().getHours(); return h<11?'breakfast':h<15?'lunch':h<21?'dinner':'snack'; };
+
+// expected doses per day for a med (respecting start/end dates)
+const dosesOn = (med, day) => (med.active && (!med.start_date || med.start_date <= day) && (!med.end_date || med.end_date >= day)) ? (med.schedule||[]) : [];
+async function adherence(days = 7){
+  const today = localDay(), from = addDays(today, -(days-1));
+  const [{ data: meds }, { data: ev }] = await Promise.all([
+    sb.from('medication').select('id,active,schedule,start_date,end_date'),
+    sb.from('medication_event').select('medication_id,day,slot,status').gte('day', from)]);
+  let due = 0, done = 0; const now = minsNow();
+  for (let i = 0; i < days; i++) { const d = addDays(from, i);
+    for (const m of meds||[]) for (const s of dosesOn(m, d)) {
+      if (d === today && toMins(s.time) > now) continue;            // not due yet
+      due++; if ((ev||[]).some(e => e.medication_id===m.id && e.day===d && e.slot===s.slot && (e.status==='taken'||e.status==='taken_late'))) done++; } }
+  return due ? { pct: Math.round(done/due*100), done, due } : null;
+}
+
+async function checkinCard(today){
+  const [{ data: meds }, { data: ev }, { data: meals }, { data: notes }, { data: dr }] = await Promise.all([
+    sb.from('medication').select('id,name,dose,schedule,start_date,end_date,active').eq('active', true).order('name'),
+    sb.from('medication_event').select('id,medication_id,slot,status,marked_at').eq('day', today),
+    sb.from('meal').select('id,meal_type,description,rating,logged_at').eq('day', today).order('logged_at'),
+    sb.from('journal_entry').select('id,body,category,logged_at').gte('logged_at', new Date(today+'T00:00').toISOString()).order('logged_at'),
+    sb.from('daily_record').select('mood,energy').eq('day', today).maybeSingle()]);
+  const doses = []; for (const m of meds||[]) for (const s of dosesOn(m, today)) doses.push({ m, s, e: (ev||[]).find(e=>e.medication_id===m.id && e.slot===s.slot) });
+  doses.sort((a,b)=>toMins(a.s.time)-toMins(b.s.time) || a.m.name.localeCompare(b.m.name));
+  const now = minsNow();
+  const dueDoses = doses.filter(d => toMins(d.s.time) <= now + 60);
+  const medsDone = dueDoses.every(d => d.e);
+  const mood = dr?.mood, energy = dr?.energy;
+  const steps = [['Meds', !doses.length || medsDone], ['Mood', !!mood], ['Energy', !!energy], ['Meal', (meals||[]).length>0]];
+  const doneN = steps.filter(s=>s[1]).length;
+  const bySlot = SLOTS.map(([k,l]) => [k, l, doses.filter(d=>d.s.slot===k)]).filter(x=>x[2].length);
+  const doseBtn = d => { const st = d.e?.status; const late = !st && toMins(d.s.time) + 120 < now;
+    return `<button class="dose ${st||''} ${late?'overdue':''}" data-med="${d.m.id}" data-slot="${d.s.slot}" data-time="${d.s.time}" data-ev="${d.e?.id||''}" data-st="${st||''}">
+      <span class="ck">${st==='taken'||st==='taken_late'?'✓':st==='skipped'?'–':''}</span>
+      <span class="dn"><b>${esc(d.m.name)}</b>${d.m.dose?` <em>${esc(d.m.dose)}</em>`:''}</span>
+      <span class="ds">${st==='taken'?'taken '+new Date(d.e.marked_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}):st==='taken_late'?'taken late':st==='skipped'?'skipped':late?'overdue':fmtTime(d.s.time)}</span></button>`; };
+  const all = doneN === steps.length;
+  return `<details class="card ci" id="checkin" ${all && !window.__ciOpen ? '' : 'open'}><summary><h3>✅ Today's check-in <span class="h3r">${all?'all done 🎉':doneN+' of '+steps.length+' done'}</span></h3>
+    <div class="steps">${steps.map(([l,ok])=>`<span class="${ok?'ok':''}">${ok?'✓':'○'} ${l}</span>`).join('')}</div></summary>
+
+    <div class="sec">💊 Meds</div>
+    ${doses.length ? bySlot.map(([k,l,ds])=>`<div class="slot"><div class="sl">${l}</div>${ds.map(doseBtn).join('')}</div>`).join('')
+      + `<p class="note">Tap = taken · tap again = skipped · again = clear</p>`
+      : `<p class="note">No medications set up yet. Add them in the <b>Meds</b> tab, or pick from your MyChart list there.</p>`}
+
+    <div class="sec">How's today?</div>
+    <div class="row" id="mood">${['😫','😕','😐','🙂','😃'].map((e,i)=>`<button class="pick ${mood===i+1?'on':''}" data-v="${i+1}" aria-label="Mood ${i+1}">${e}</button>`).join('')}</div>
+    <div class="sub" style="margin:10px 0 6px">Energy</div>
+    <div class="row" id="energy">${[1,2,3,4,5].map(i=>`<button class="pick num ${energy===i?'on':''}" data-v="${i}">${i}</button>`).join('')}</div>
+
+    <div class="sec">🍽️ Meals</div>
+    <div class="mtypes" id="mtype">${['breakfast','lunch','dinner','snack'].map(t=>`<button data-t="${t}" class="${t===defaultMeal()?'on':''}">${t[0].toUpperCase()+t.slice(1)}</button>`).join('')}</div>
+    <div class="mline"><input id="mdesc" placeholder="e.g. two eggs, wheat toast, coffee" maxlength="200" enterkeyhint="done">
+      <div class="rates" id="mrate">${Object.entries(MEAL_RATE).map(([k,v])=>`<button data-r="${k}" aria-label="${k}">${v}</button>`).join('')}</div></div>
+    ${(meals||[]).length ? `<ul class="list">${meals.map(m=>`<li><span>${MEAL_RATE[m.rating]||'⚪'} <b>${m.meal_type?m.meal_type[0].toUpperCase()+m.meal_type.slice(1):''}</b> ${esc(m.description)}</span><button class="x" data-del-meal="${m.id}" aria-label="Remove">×</button></li>`).join('')}</ul>`
+      : `<p class="note">Type what you ate, then tap 🟢 good, 🟡 okay or 🔴 not great to save.</p>`}
+
+    <div class="sec">📝 Anything else?</div>
+    <div class="mline"><input id="note" placeholder="e.g. knee hurt after walking" maxlength="400" enterkeyhint="send"><button class="btn sm" id="saveNote">Save</button></div>
+    ${(notes||[]).length ? `<ul class="list">${notes.map(n=>`<li><span><em class="tag">${esc(n.category||'general')}</em> ${esc(n.body)} ${n.logged_at?`<i>${new Date(n.logged_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})}</i>`:''}</span><button class="x" data-del-note="${n.id}" aria-label="Remove">×</button></li>`).join('')}</ul>`:''}
+  </details>`;
+}
+
+function wireCheckin(today){
+  const card = $('#checkin'); if (!card) return;
+  card.querySelector('summary').addEventListener('click', () => { window.__ciOpen = !card.open; });
+  const refresh = async () => { const html = await checkinCard(today); card.outerHTML = html; wireCheckin(today); };
+  const err = e => { if (e) alert('Could not save: ' + e.message); return !!e; };
+  card.querySelectorAll('.dose').forEach(b => b.onclick = async () => {
+    const st = b.dataset.st, id = b.dataset.ev;
+    if (!st) { const late = toMins(b.dataset.time) + 120 < minsNow();
+      if (err((await sb.from('medication_event').upsert({ user_id:user.id, medication_id:b.dataset.med, day:today, slot:b.dataset.slot, status: late?'taken_late':'taken', marked_at:new Date().toISOString() }, { onConflict:'user_id,medication_id,day,slot' })).error)) return; }
+    else if (st==='taken' || st==='taken_late') { if (err((await sb.from('medication_event').update({ status:'skipped', marked_at:new Date().toISOString() }).eq('id', id)).error)) return; }
+    else { if (err((await sb.from('medication_event').delete().eq('id', id)).error)) return; }
+    refresh();
+  });
+  const saveDR = async (field, v, row) => {
+    row.querySelectorAll('.pick').forEach(x=>x.classList.toggle('on', +x.dataset.v===v));
+    err((await sb.from('daily_record').upsert({ user_id:user.id, day:today, [field]:v, updated_at:new Date().toISOString() }, { onConflict:'user_id,day' })).error);
+    refresh();
+  };
+  $('#mood').onclick = e => { const x=e.target.closest('.pick'); if(x) saveDR('mood', +x.dataset.v, $('#mood')); };
+  $('#energy').onclick = e => { const x=e.target.closest('.pick'); if(x) saveDR('energy', +x.dataset.v, $('#energy')); };
+  $('#mtype').onclick = e => { const x=e.target.closest('button'); if(!x) return; $('#mtype').querySelectorAll('button').forEach(y=>y.classList.toggle('on', y===x)); };
+  $('#mrate').onclick = async e => { const x=e.target.closest('button'); if(!x) return; const d = $('#mdesc').value.trim();
+    if (!d) { $('#mdesc').focus(); $('#mdesc').placeholder = 'Type the meal first, then tap a color'; return; }
+    const t = $('#mtype').querySelector('.on')?.dataset.t || defaultMeal();
+    if (err((await sb.from('meal').insert({ user_id:user.id, day:today, meal_type:t, description:d, rating:x.dataset.r })).error)) return; refresh(); };
+  const saveNote = async () => { const t = $('#note').value.trim(); if (!t) return;
+    if (err((await sb.from('journal_entry').insert({ user_id:user.id, body:t, category:noteCat(t) })).error)) return; refresh(); };
+  $('#saveNote').onclick = saveNote; $('#note').onkeydown = e => { if (e.key==='Enter') saveNote(); };
+  card.querySelectorAll('[data-del-meal]').forEach(b => b.onclick = async () => { if (!err((await sb.from('meal').delete().eq('id', b.dataset.delMeal)).error)) refresh(); });
+  card.querySelectorAll('[data-del-note]').forEach(b => b.onclick = async () => { if (!err((await sb.from('journal_entry').delete().eq('id', b.dataset.delNote)).error)) refresh(); });
+}
+
+/* ---------- Meds tab ---------- */
+async function loadMeds(){
+  const el = $('#v-meds');
+  el.innerHTML = `<header class="top"><div class="hello">Meds</div></header><div class="empty">Loading…</div>`;
+  const [{ data: meds }, adh, { data: rx }] = await Promise.all([
+    sb.from('medication').select('*').order('active',{ascending:false}).order('name'),
+    adherence(7),
+    sb.from('clinical_record').select('resource_type,display,recorded_on,resource->>status').in('resource_type',['MedicationRequest','MedicationStatement','MedicationOrder']).not('display','is',null).order('recorded_on',{ascending:false})]);
+  const have = new Set((meds||[]).map(m=>m.name.toLowerCase()));
+  const sugg = []; const seen = new Set();
+  for (const r of rx||[]) { const k = r.display.toLowerCase().trim(); if (seen.has(k) || have.has(k)) continue; seen.add(k);
+    sugg.push({ name: r.display, date: r.recorded_on, status: r.status }); }
+  const active = (meds||[]).filter(m=>m.active), past = (meds||[]).filter(m=>!m.active);
+  const medRow = m => `<div class="medrow"><div><b>${esc(m.name)}</b>${m.dose?` · ${esc(m.dose)}`:''}
+      <div class="sub">${(m.schedule||[]).map(s=>`${slotLabel(s.slot)} ${fmtTime(s.time)}`).join(' · ') || 'No schedule (as needed)'}</div>
+      ${m.instructions?`<div class="src">${esc(m.instructions)}</div>`:''}${m.refill_info?`<div class="src">Refill: ${esc(m.refill_info)}</div>`:''}</div>
+    <div class="medact"><button class="btn ghost sm" data-edit="${m.id}">Edit</button>${m.active?`<button class="x" data-stop="${m.id}" title="Stop taking">Stop</button>`:`<button class="x" data-restart="${m.id}">Restart</button>`}</div></div>`;
+  el.querySelector('.empty').outerHTML = `
+    ${adh ? `<div class="card"><h3>💊 Last 7 days</h3><div class="big">${adh.pct}<small>%</small></div><div class="goalbar"><i style="width:${adh.pct}%"></i></div>
+      <div class="sub">${adh.done} of ${adh.due} doses taken${adh.pct>=90?' — nicely consistent 🌊':''}</div></div>` : ''}
+    <div class="card"><h3>Your medications</h3>
+      ${active.length ? active.map(medRow).join('') : '<p class="empty">None yet. Add one below or pick from your MyChart list.</p>'}
+      <button class="btn" id="addMed" style="margin-top:12px">+ Add medication</button>
+      <div id="medForm"></div></div>
+    ${sugg.length ? `<div class="card"><h3>From your MyChart records</h3><p class="sub" style="margin:0 0 8px">Tap to add with a schedule. Only add what you currently take.</p>
+      ${sugg.slice(0,25).map((s,i)=>`<div class="medrow"><div>${esc(s.name)}<div class="src">${s.date?new Date(s.date+'T12:00').toLocaleDateString('en-US',{month:'short',year:'numeric'}):''}${s.status?` · ${esc(s.status)}`:''}</div></div>
+        <div class="medact"><button class="btn ghost sm" data-sugg="${i}">+ Add</button></div></div>`).join('')}</div>` : ''}
+    ${past.length ? `<details class="card"><summary>Stopped (${past.length})</summary>${past.map(medRow).join('')}</details>`:''}
+    <p class="note">This tracks what you take — it doesn't give dosing advice. Check changes with your doctor or pharmacist.</p>`;
+  const form = (m = {}) => { const sch = m.schedule || [];
+    $('#medForm').innerHTML = `<div class="mform">
+      <label>Name<input id="fName" value="${esc(m.name||'')}" placeholder="Medication name"></label>
+      <label>Dose<input id="fDose" value="${esc(m.dose||'')}" placeholder="e.g. 10 mg, 1 tablet"></label>
+      <div class="flab">When</div>
+      ${SLOTS.map(([k,l,t])=>{ const s = sch.find(x=>x.slot===k); return `<div class="fslot"><label class="chk"><input type="checkbox" data-slot="${k}" ${s?'checked':''}> ${l}</label><input type="time" data-time="${k}" value="${s?.time||t}"></div>`; }).join('')}
+      <label>Instructions<input id="fInst" value="${esc(m.instructions||'')}" placeholder="e.g. with food"></label>
+      <label>Refill<input id="fRefill" value="${esc(m.refill_info||'')}" placeholder="e.g. due Nov 20, CVS"></label>
+      <div class="row" style="margin-top:10px"><button class="btn" id="fSave">Save</button><button class="btn ghost" id="fCancel">Cancel</button></div></div>`;
+    $('#fCancel').onclick = () => $('#medForm').innerHTML = '';
+    $('#fSave').onclick = async () => {
+      const name = $('#fName').value.trim(); if (!name) { $('#fName').focus(); return; }
+      const schedule = SLOTS.filter(([k]) => $(`[data-slot="${k}"]`).checked).map(([k]) => ({ slot:k, time: $(`[data-time="${k}"]`).value || '08:00' }));
+      const row = { user_id:user.id, name, dose:$('#fDose').value.trim()||null, schedule, instructions:$('#fInst').value.trim()||null, refill_info:$('#fRefill').value.trim()||null, active:true };
+      const { error } = m.id ? await sb.from('medication').update(row).eq('id', m.id) : await sb.from('medication').insert({ ...row, start_date: localDay() });
+      if (error) return alert('Could not save: '+error.message);
+      loadMeds();
+    };
+    $('#fName').focus();
+  };
+  $('#addMed').onclick = () => form();
+  el.querySelectorAll('[data-sugg]').forEach(b => b.onclick = () => { form({ name: sugg[+b.dataset.sugg].name }); $('#medForm').scrollIntoView({behavior:'smooth', block:'center'}); });
+  el.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => { form((meds||[]).find(m=>m.id===b.dataset.edit)); $('#medForm').scrollIntoView({behavior:'smooth', block:'center'}); });
+  el.querySelectorAll('[data-stop]').forEach(b => b.onclick = async () => { await sb.from('medication').update({ active:false, end_date: localDay() }).eq('id', b.dataset.stop); loadMeds(); });
+  el.querySelectorAll('[data-restart]').forEach(b => b.onclick = async () => { await sb.from('medication').update({ active:true, end_date: null }).eq('id', b.dataset.restart); loadMeds(); });
 }
 
 /* ---------- today ---------- */
@@ -353,8 +559,8 @@ async function loadToday(){
   const wkA = A.filter(r=>r.day>=addDays(today,-7)), prA = A.filter(r=>r.day<addDays(today,-7) && r.day>=addDays(today,-14));
   const s7 = avg(wkA.map(r=>+r.steps||0)), sP = avg(prA.map(r=>+r.steps||0));
   const m7 = wkA.reduce((t,r)=>t+(+r.exercise_min||0),0), mP = prA.reduce((t,r)=>t+(+r.exercise_min||0),0);
-  const stepMsg = (s7!=null && sP!=null) ? (s7>=sP ? `👏 You're averaging <b>${fmtNum(s7-sP)} more steps a day</b> than the week before.` : `Last week averaged ${fmtNum(sP-s7)} more steps a day — a 15-minute walk closes most of that gap.`) : '';
-  const minMsg = (prA.length && wkA.length) ? (m7>=mP ? `💪 <b>${fmtNum(m7-mP)} more active minutes</b> than the week before (${fmtNum(m7)} vs ${fmtNum(mP)}).` : `${fmtNum(m7)} active minutes this week vs ${fmtNum(mP)} the week before — one bike ride evens it up.`) : '';
+  const stepMsg = (s7!=null && sP!=null) ? (Math.abs(s7-sP) < Math.max(50, sP*0.02) ? `🌊 Holding steady at about <b>${fmtNum(s7)} steps a day</b> — same as the week before.` : s7>=sP ? `👏 You're averaging <b>${fmtNum(s7-sP)} more steps a day</b> than the week before.` : `Last week averaged ${fmtNum(sP-s7)} more steps a day — a 15-minute walk closes most of that gap.`) : '';
+  const minMsg = (prA.length && wkA.length) ? (m7===mP ? `💪 <b>${fmtNum(m7)} active minutes</b> this week — matching the week before.` : m7>mP ? `💪 <b>${fmtNum(m7-mP)} more active minutes</b> than the week before (${fmtNum(m7)} vs ${fmtNum(mP)}).` : `${fmtNum(m7)} active minutes this week vs ${fmtNum(mP)} the week before — one bike ride evens it up.`) : '';
   const WK = wk.data||[];
   const moveCard = `<div class="card"><h3>🚴 Move</h3>
     <div class="grid2"><div><div class="big">${fmtNum(aToday?.steps)}</div><div class="sub">steps today</div></div>
@@ -379,24 +585,14 @@ async function loadToday(){
       ${tile('Max HR', mx, 'hr_max', 'bpm', null)}${tile('Blood O₂', o2, 'spo2_pct', '%', false, 1)}</div>
     <p class="note">"Usual" = your 30-day average. Blood O₂ comes from your Apple Watch.</p></div>`;
 
-  const mood = dr.data?.mood, energy = dr.data?.energy;
+  const ci = await checkinCard(today);
   el.querySelector('.empty').outerHTML = `
     <div class="hero"><div><div class="hello">${greet}${name?', '+esc(name):''}</div>
       <div class="date">${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
       <div class="me">${ageFrom(DOB)} yrs${heightTxt?` · ${heightTxt}`:''}</div></div>${weightCard}</div>
-    ${sleepCard}${moveCard}${heartCard}
-    <div class="card"><h3>How's today?</h3>
-      <div class="row" id="mood">${['😫','😕','😐','🙂','😃'].map((e,i)=>`<button class="pick ${mood===i+1?'on':''}" data-v="${i+1}" aria-label="Mood ${i+1}">${e}</button>`).join('')}</div>
-      <div class="sub" style="margin:12px 0 6px">Energy</div>
-      <div class="row" id="energy">${[1,2,3,4,5].map(i=>`<button class="pick num ${energy===i?'on':''}" data-v="${i}">${i}</button>`).join('')}</div></div>
+    ${ci}${sleepCard}${moveCard}${heartCard}
     <p class="note">Not medical advice. Check with your care team about anything that concerns you.</p>`;
-  const save = async (field, v, row) => {
-    row.querySelectorAll('.pick').forEach(b=>b.classList.toggle('on', +b.dataset.v===v));
-    const { error } = await sb.from('daily_record').upsert({ user_id:user.id, day:today, [field]:v, updated_at:new Date().toISOString() }, { onConflict:'user_id,day' });
-    if (error) alert('Could not save: '+error.message);
-  };
-  $('#mood').onclick = e => { const b=e.target.closest('.pick'); if(b) save('mood', +b.dataset.v, $('#mood')); };
-  $('#energy').onclick = e => { const b=e.target.closest('.pick'); if(b) save('energy', +b.dataset.v, $('#energy')); };
+  wireCheckin(today);
 }
 
 /* ---------- trends (basic) ---------- */
