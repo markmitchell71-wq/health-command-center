@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Operation: Outlive the Group Chat</title>
-<meta name="theme-color" content="#F4F1EA">
+<meta name="theme-color" content="#0B3954">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Outlive">
@@ -14,8 +14,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{
-  --bg:#F4F1EA; --card:#FFFDF8; --ink:#1F2A2E; --muted:#6B7478; --line:#E4DED2;
-  --accent:#2F6F62; --accent-soft:#DCEBE6; --warm:#C9833A; --warm-soft:#F5E6D3; --down:#9A5B4A;
+  --bg:#EEF5F4; --card:#FFFFFF; --ink:#0B2A3A; --muted:#5F7480; --line:#DCE7E5;
+  --accent:#0E7C86; --accent-soft:#D5EEEC; --deep:#0B3954; --warm:#E76F51; --warm-soft:#FCE5DC; --down:#B4553C; --sand:#F4D58D;
   --r:18px; --safe-b:env(safe-area-inset-bottom);
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -46,7 +46,7 @@ header.top{display:flex;justify-content:space-between;align-items:flex-end;margi
 .empty{color:var(--muted);font-size:14px}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 18px;border-radius:14px;background:var(--accent);color:#fff;font-weight:600;width:100%}
 .btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--accent)}
-nav.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,253,248,.92);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:var(--safe-b)}
+nav.tabs{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.94);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--line);display:flex;justify-content:center;padding-bottom:var(--safe-b)}
 nav.tabs .in{display:flex;max-width:560px;width:100%}
 nav.tabs button{flex:1;padding:9px 0 8px;font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px}
 nav.tabs button span{font-size:21px;filter:grayscale(1);opacity:.6}
@@ -77,7 +77,59 @@ table.cmp td{padding:7px 0;border-top:1px solid var(--line);text-align:right}
 table.cmp td:first-child,table.cmp th:first-child{text-align:left}
 table.cmp tr.lead td{font-weight:600}
 .scroll{overflow-x:auto}
-.hero{display:grid;grid-template-columns:1fr 160px;gap:12px;align-items:start;margin-bottom:12px}
+.banner{position:relative;margin:calc(-1 * (env(safe-area-inset-top) + 18px)) -16px 14px;padding:calc(env(safe-area-inset-top) + 22px) 18px 34px;
+  background:radial-gradient(120% 90% at 85% 0%,#2A9D8F 0%,transparent 60%),linear-gradient(160deg,#0B3954 0%,#0E5E73 55%,#0E7C86 100%);
+  display:flex;align-items:center;gap:12px;color:#fff;overflow:hidden}
+.banner .logo{width:58px;height:58px;flex:none;border-radius:50%;background:rgba(255,255,255,.12);box-shadow:0 0 0 2px rgba(244,213,141,.55),0 6px 18px rgba(0,0,0,.25);display:grid;place-items:center}
+.banner .logo svg{width:50px;height:50px;animation:swim 6s ease-in-out infinite}
+@keyframes swim{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-3px) rotate(4deg)}}
+.banner .kicker{font:700 11px/1 -apple-system,sans-serif;letter-spacing:.28em;text-transform:uppercase;color:var(--sand)}
+.banner .brand{font:800 25px/1.05 "Avenir Next","SF Pro Rounded",-apple-system,sans-serif;letter-spacing:-.01em;margin-top:4px;
+  background:linear-gradient(100deg,#fff 0%,#fff 40%,#F4D58D 50%,#fff 60%,#fff 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 7s linear infinite}
+@keyframes shine{0%{background-position:150% 0}100%{background-position:-100% 0}}
+.banner .vchip{position:absolute;top:calc(env(safe-area-inset-top) + 12px);right:14px;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;background:rgba(255,255,255,.16);color:#fff}
+.banner .wave{position:absolute;left:0;bottom:-1px;width:100%;height:26px}
+.login .banner{margin:0 -16px;border-radius:0 0 28px 28px}
+.banner .logo{width:64px;height:64px;position:relative;background:none;box-shadow:none}
+.banner .logo img{width:64px;height:64px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 3px var(--sand),0 8px 20px rgba(0,0,0,.35)}
+.banner .tbadge{position:absolute;right:-8px;bottom:-6px;width:32px;height:32px;border-radius:50%;background:#0B3954;box-shadow:0 0 0 2px var(--sand);display:grid;place-items:center}
+.banner .tbadge svg{width:28px;height:28px;animation:swim 6s ease-in-out infinite}
+.banner .logo > svg{display:none}
+@media (prefers-reduced-motion:reduce){.banner .tbadge svg,.banner .brand{animation:none}}
+.hero{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:12px}
+.wpill{flex:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:8px 12px;text-align:right;min-width:112px}
+.wpill .wv{font:700 20px/1.1 -apple-system,sans-serif;font-variant-numeric:tabular-nums}
+.wpill .wv small{font-size:12px;color:var(--muted);font-weight:500;margin-left:2px}
+.wpill .wl{font-size:11px;color:var(--muted);margin-top:2px}
+.wpill .wc{font-size:11px;font-weight:600;color:var(--accent);margin-top:2px}
+.wpill .wn{font-size:11px;color:var(--warm);margin-top:2px}
+.sleeptop{display:flex;gap:14px;align-items:center}
+.ring{position:relative;width:104px;height:104px;flex:none}
+.ring svg{width:104px;height:104px;transform:rotate(-90deg)}
+.ring .rv{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .rv b{font:700 22px/1 -apple-system,sans-serif;font-variant-numeric:tabular-nums}
+.ring .rv span{font-size:11px;color:var(--muted);margin-top:3px}
+.bw{flex:1;display:grid;gap:8px}
+.bw div{background:var(--bg);border-radius:12px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
+.bw b{font-size:17px;font-variant-numeric:tabular-nums}
+.bw span{font-size:11px;color:var(--muted)}
+.tl{margin-top:14px}
+.tl .hdr,.tl .r{display:grid;grid-template-columns:38px 1fr 40px;gap:8px;align-items:center}
+.tl .hdr{font-size:10px;color:var(--muted);margin-bottom:4px}
+.tl .ax{position:relative;height:12px}
+.tl .ax i{position:absolute;transform:translateX(-50%);font-style:normal}
+.tl .r{height:22px}
+.tl .d{font-size:12px;color:var(--muted)}
+.tl .tr{position:relative;height:12px;background:var(--bg);border-radius:6px}
+.tl .tr .b{position:absolute;top:0;height:12px;border-radius:6px;background:#9FD3CF}
+.tl .tr .b.ok{background:var(--accent)}
+.tl .tr .b.est{background:repeating-linear-gradient(45deg,#cfe5e3 0 4px,#e6f2f1 4px 8px)}
+.tl .tr .u{position:absolute;top:-3px;bottom:-3px;border-left:1.5px dashed var(--warm);opacity:.7}
+.tl .v{font-size:12px;text-align:right;font-variant-numeric:tabular-nums}
+.tl .v.ok{color:var(--accent);font-weight:700}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+
 .hero .hello{font-size:26px}
 .me{margin-top:8px;font-size:13px;font-weight:600;color:var(--accent)}
 .wcard{margin:0;padding:12px}
@@ -124,7 +176,10 @@ table.cmp.tight td:first-child,table.cmp.tight th:first-child{padding-left:0}
 </div></nav>
 
 <script>
-const VERSION = '1.5';
+const VERSION = '1.6';
+const TURTLE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">   <defs>     <radialGradient id="tShell" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#7FD1B9"/><stop offset=".6" stop-color="#2A9D8F"/><stop offset="1" stop-color="#1D6F66"/></radialGradient>     <linearGradient id="tSkin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A8E6CF"/><stop offset="1" stop-color="#5CB89F"/></linearGradient>   </defs>   <g transform="rotate(-18 100 100)">     <!-- flippers -->     <path d="M62 78 C30 52 14 58 10 66 C28 74 44 86 58 98 Z" fill="url(#tSkin)"/>     <path d="M138 78 C170 52 186 58 190 66 C172 74 156 86 142 98 Z" fill="url(#tSkin)"/>     <path d="M70 138 C52 152 46 166 52 172 C62 162 74 154 84 146 Z" fill="url(#tSkin)"/>     <path d="M130 138 C148 152 154 166 148 172 C138 162 126 154 116 146 Z" fill="url(#tSkin)"/>     <!-- head -->     <ellipse cx="100" cy="42" rx="17" ry="20" fill="url(#tSkin)"/>     <circle cx="93" cy="37" r="2.6" fill="#0B3954"/><circle cx="107" cy="37" r="2.6" fill="#0B3954"/>     <!-- shell -->     <ellipse cx="100" cy="104" rx="46" ry="54" fill="url(#tShell)" stroke="#145A52" stroke-width="3"/>     <g fill="none" stroke="#C9F2E3" stroke-width="2.4" stroke-linejoin="round" opacity=".85">       <polygon points="100,78 116,88 116,108 100,118 84,108 84,88"/>       <path d="M100 78 L100 58 M116 88 L134 78 M116 108 L136 120 M100 118 L100 150 M84 108 L64 120 M84 88 L66 78"/>     </g>   </g> </svg> `;
+const FACE = 'data:image/jpeg;base64,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';
+const banner = () => `<div class="banner"><div class="logo"><img src="${FACE}" alt="Mark"><span class="tbadge">${TURTLE}</span></div><div class="btxt"><div class="kicker">Operation:</div><div class="brand">Outlive the Group&nbsp;Chat</div></div><span class="vchip">v${VERSION}</span><svg class="wave" viewBox="0 0 400 40" preserveAspectRatio="none"><path d="M0 22 Q50 6 100 22 T200 22 T300 22 T400 22 V40 H0Z" fill="var(--bg)"/></svg></div>`;
 const SB_URL = 'https://wwmcugtxyuvkxwurirgu.supabase.co';
 const SB_KEY = 'sb_publishable_uQJ27EvPPtgnBLLLdX5HZA_Q96ho4ZZ';
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
@@ -150,7 +205,7 @@ function render(){
   if (!user) {
     $('#tabs').hidden = true;
     app.innerHTML = `<div class="login">
-      <h1>Operation: Outlive<br>the Group Chat</h1>
+      ${banner()}
       <p>Your personal health command center.</p>
       <button class="btn" id="signin">Sign in with Google</button>
       <p class="ver">v${VERSION}</p></div>`;
@@ -226,7 +281,7 @@ async function loadToday(){
   const el = $('#v-today'), today = localDay(), h = new Date().getHours();
   const greet = h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : 'Good evening';
   const name = (user.user_metadata?.full_name || '').split(' ')[0] || '';
-  el.innerHTML = `<div class="apptitle">Operation: Outlive the Group Chat<span>v${VERSION}</span></div><div class="empty">Loading…</div>`;
+  el.innerHTML = banner() + `<div class="empty">Loading…</div>`;
   const from30 = addDays(today,-31), from15 = addDays(today,-15);
   const [sleep, cpap, act, heart, wk, wts, ht, dr] = await Promise.all([
     sb.from('sleep_night').select('night,source,asleep_min,deep_min,rem_min,bedtime,wake_time').gte('night',from30).order('night',{ascending:false}),
@@ -247,12 +302,10 @@ async function loadToday(){
   const wLast = W[0], wPrev = W.find(w => localDay(new Date(w.measured_at)) !== localDay(new Date(wLast?.measured_at||0)));
   const wDays = wLast ? Math.round((new Date(today) - new Date(localDay(new Date(wLast.measured_at))))/86400000) : null;
   const wChg = (wLast && wPrev) ? +wLast.value - +wPrev.value : null;
-  const weightCard = `<div class="card wcard"><h3>⚖️ Weight</h3>
-    ${wLast ? `<div class="big">${(+wLast.value).toFixed(1)}<small>lb</small></div>
-      <div class="sub">${new Date(wLast.measured_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})}${wDays>0?` · ${wDays}d ago`:' · today'}</div>
-      ${wChg!=null ? `<div class="src">${wChg<0?'↓':wChg>0?'↑':'→'} ${Math.abs(wChg).toFixed(1)} lb since ${new Date(wPrev.measured_at).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'})}</div>`:''}
-      ${W.length>1?`${sparkSvg(W.slice(0,12).reverse().map(w=>+w.value))}<div class="src">last ${Math.min(12,W.length)} weigh-ins</div>`:''}
-      ${wDays>7 ? `<div class="src">Step on the scale to update</div>`:''}` : '<p class="empty">No weigh-ins yet</p>'}</div>`;
+  const weightCard = `<div class="wpill">${wLast ? `<div class="wv">⚖️ ${(+wLast.value).toFixed(1)}<small>lb</small></div>
+      <div class="wl">${new Date(wLast.measured_at).toLocaleDateString('en-US',{month:'short',day:'numeric'})} · ${wDays>0?wDays+'d ago':'today'}</div>
+      ${wChg!=null ? `<div class="wc">${wChg<0?'↓':wChg>0?'↑':'→'} ${Math.abs(wChg).toFixed(1)} lb vs prior</div>`:''}
+      ${wDays>7 ? `<div class="wn">Time to weigh in</div>`:''}` : `<div class="wl">⚖️ No weigh-ins yet</div>`}</div>`;
 
   // ----- sleep -----
   const N = sleepNights(sleep.data||[], cpap.data||[]);
@@ -265,21 +318,32 @@ async function loadToday(){
   const tag = (m, usual, laterWord, earlierWord) => (m==null||usual==null) ? '' : m-usual > 45 ? `<span class="chip warm">${laterWord}</span>` : usual-m > 45 ? `<span class="chip">${earlierWord}</span>` : '';
   const pctT = lastN?.duration ? Math.min(100, Math.round(lastN.duration/SLEEP_TARGET*100)) : 0;
   const week = N.filter(n => n.night > addDays(today,-7)).slice(0,7);
+  const ring = (min) => { const p = Math.min(1, (min||0)/SLEEP_TARGET), C = 2*Math.PI*44;
+    return `<div class="ring"><svg viewBox="0 0 104 104"><circle cx="52" cy="52" r="44" fill="none" stroke="var(--accent-soft)" stroke-width="10"/>
+      <circle cx="52" cy="52" r="44" fill="none" stroke="${p>=1?'var(--accent)':'#3FA7A0'}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${(p*C).toFixed(1)} ${C.toFixed(1)}"/></svg>
+      <div class="rv"><b>${hmm(min)}</b><span>${p>=1?'goal met 🎉':Math.round(p*100)+'% of 7h'}</span></div></div>`; };
+  // timeline: x axis 8 PM (120 after 6 PM) → 11 AM (1020)
+  const X0 = 120, X1 = 1020, xp = m => Math.max(0, Math.min(100, (m - X0) / (X1 - X0) * 100));
+  const tlRows = week.map(n => {
+    const t = timing(n), ok = (n.duration||0) >= SLEEP_TARGET;
+    let bar = '';
+    if (t?.bedtime && t?.wake_time) { const b0 = sinceSix(t.bedtime), b1 = sinceSix(t.wake_time); bar = `<div class="b ${ok?'ok':''}" style="left:${xp(b0)}%;width:${Math.max(2, xp(b1)-xp(b0))}%" title="${clock(t.bedtime)} – ${clock(t.wake_time)}"></div>`; }
+    else if (n.duration && usualWake!=null) { const b1 = usualWake, b0 = b1 - n.duration; bar = `<div class="b est" style="left:${xp(b0)}%;width:${Math.max(2, xp(b1)-xp(b0))}%" title="No bed/wake times — placed at your usual wake time"></div>`; }
+    return `<div class="r"><span class="d">${new Date(n.night+'T12:00').toLocaleDateString('en-US',{weekday:'short'})}</span>
+      <div class="tr">${usualBed!=null?`<span class="u" style="left:${xp(usualBed)}%"></span>`:''}${usualWake!=null?`<span class="u" style="left:${xp(usualWake)}%"></span>`:''}${bar}</div>
+      <span class="v ${ok?'ok':''}">${hmm(n.duration)}</span></div>`; }).join('');
+  const axis = [[180,'9p'],[360,'12a'],[540,'3a'],[720,'6a'],[900,'9a']].map(([m,l])=>`<i style="left:${xp(m)}%">${l}</i>`).join('');
   const sleepCard = `<div class="card"><h3>😴 Sleep <span class="h3r">goal 7h</span></h3>
     ${lastN ? `
-      <div class="big">${hm(lastN.duration)}</div>
-      <div class="goalbar"><i style="width:${pctT}%"></i></div>
-      <div class="sub">${lastN.night===today?'Last night':'Night ending '+shortDay(lastN.night)} · ${lastN.durationSrc==='cpap'?'CPAP mask-on':(SRC[lastN.durationSrc]||lastN.durationSrc)}
-        ${lastN.duration>=SLEEP_TARGET ? ' · goal met 🎉' : lastN.duration ? ` · ${fmtMin(SLEEP_TARGET-lastN.duration).replace(/^0h /,'')} short of 7h` : ''}</div>
-      ${lt ? `<div class="times"><div><b>${clock(lt.bedtime)}</b><span>to bed ${tag(sinceSix(lt.bedtime), usualBed, 'later than usual', 'earlier than usual')}</span></div>
-        <div><b>${clock(lt.wake_time)}</b><span>woke up ${tag(lt.wake_time?sinceSix(lt.wake_time):null, usualWake, 'slept in', 'up early')}</span></div></div>
-        <div class="src">Usual: bed ${clockFromSix(usualBed)} · up ${clockFromSix(usualWake)} (30-night median)</div>` : ''}
-      ${avg7 ? `<p class="msg">7-night average <b>${fmtMin(avg7)}</b> · goal met ${hit7} of ${last7.length} nights</p>`:''}
-      ${week.length ? `<div class="scroll"><table class="cmp tight"><tr><th>Night</th><th>Bed</th><th>Up</th><th>Sleep</th><th></th></tr>
-        ${week.map(n=>{ const t = timing(n); const lateB = t && usualBed!=null && sinceSix(t.bedtime)-usualBed>45; const early = t?.wake_time && usualWake!=null && usualWake-sinceSix(t.wake_time)>45;
-          return `<tr><td>${shortDay(n.night)}</td><td class="${lateB?'warmtxt':''}">${t?clock(t.bedtime):'—'}</td><td class="${early?'warmtxt':''}">${t?.wake_time?clock(t.wake_time):'—'}</td>
-          <td>${hmm(n.duration)}</td><td class="minibar"><i style="width:${Math.min(100,(n.duration||0)/SLEEP_TARGET*100)}%" class="${(n.duration||0)>=SLEEP_TARGET?'ok':''}"></i></td></tr>`; }).join('')}
-      </table></div>`:''}
+      <div class="sleeptop">${ring(lastN.duration)}
+        <div class="bw">
+          <div><span>To bed</span><b>${lt?clock(lt.bedtime):'—'}</b>${lt?tag(sinceSix(lt.bedtime), usualBed, 'later than usual', 'earlier than usual'):''}</div>
+          <div><span>Woke up</span><b>${lt?.wake_time?clock(lt.wake_time):'—'}</b>${lt?.wake_time?tag(sinceSix(lt.wake_time), usualWake, 'slept in', 'up early'):''}</div>
+        </div></div>
+      <div class="src">${lastN.night===today?'Last night':'Night ending '+shortDay(lastN.night)} · ${lastN.durationSrc==='cpap'?'CPAP mask-on time':(SRC[lastN.durationSrc]||lastN.durationSrc)}${lastN.cpap?` · AHI ${lastN.cpap.ahi}`:''}${usualBed!=null?` · usual ${clockFromSix(usualBed)}–${clockFromSix(usualWake)}`:''}</div>
+      ${week.length ? `<div class="tl"><div class="hdr"><span>Last 7</span><div class="ax">${axis}</div><span style="text-align:right">Sleep</span></div>${tlRows}</div>
+        <div class="legend"><span><i style="background:var(--accent)"></i>7h+ night</span><span><i style="background:#9FD3CF"></i>under 7h</span><span><i style="border-left:2px dashed var(--warm);border-radius:0;width:2px"></i>your usual bed / wake</span></div>`:''}
+      ${avg7 ? `<p class="msg">7-night average <b>${fmtMin(avg7)}</b> · goal met <b>${hit7} of ${last7.length}</b> nights${hit7>=4?' 🌊':''}</p>`:''}
       <details><summary>Compare sources for this night</summary>${sleepCompare(lastN)}</details>`
     : '<p class="empty">No recent sleep</p>'}</div>`;
 
