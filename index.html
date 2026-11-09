@@ -1004,7 +1004,7 @@ async function loadToday(){
     sb.from('body_measurement').select('measured_at,value').eq('kind','weight').lt('measured_at',dayStartISO(addDays(day,1))).order('measured_at',{ascending:false}).limit(200),
     sb.from('clinical_record').select('recorded_on,resource').eq('resource_type','Observation').eq('display','Height').order('recorded_on',{ascending:false}).limit(1),
     sb.from('user_pref').select('weight_goal_lb,weight_goal_date').maybeSingle(),
-    sb.from('ai_summary').select('body,created_at').eq('day',day).maybeSingle(),
+    sb.from('daily_recap').select('body,created_at').eq('day',day).maybeSingle(),
     sb.from('daily_record').select('day,mood,energy').in('day',[prev,day]),
     isToday ? sb.from('medication').select('id,name,pharmacy,supply_days,last_filled,rx_page,every_days').eq('active',true) : Promise.resolve({data:[]}),
     isToday ? sb.from('cpap_supply').select('item,interval_days,last_replaced') : Promise.resolve({data:[]}),
