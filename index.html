@@ -246,20 +246,45 @@ button.card.due{display:block;width:100%;text-align:left;border-color:#F2C38B;ba
 .seg button{flex:1;padding:9px 0;border-radius:10px;background:#fff;border:1px solid var(--line);font-size:13px}
 .seg button.on{background:var(--deep);border-color:var(--deep);color:#fff;font-weight:600}
 table.wow td:nth-child(2) b{font-weight:700}
+/* 2.3 */
+nav.tabs button{font-size:10px}
+button.card.sleepmini{display:block;width:100%;text-align:left}
+.mini3{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px}
+.mini3 div{background:var(--bg);border-radius:12px;padding:8px 10px}
+.mini3 b{display:block;font-size:17px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.mini3 b.okc{color:var(--accent)}
+.mini3 span{font-size:11px;color:var(--muted)}
+.seg.periods{margin:4px 0 12px}
+.seg.periods button{font-size:13px;padding:8px 0}
+#evSmoke button{padding:10px 0;font-size:14px}
+table.gt td small{color:var(--muted);font-size:10px}
+table.gt th small{font-weight:500;text-transform:none;letter-spacing:0}
+td.worse,span.worse{color:var(--down);font-weight:600}
+td.better,span.better{color:var(--accent);font-weight:600}
+.rxhead{display:flex;gap:4px;align-items:flex-start;padding:12px;border-radius:12px;background:var(--bg)}
+.rxhead .dot{margin-top:7px}
+.rxhead b{font-size:18px}
+.rxhead.warn{background:#FFF8EC}.rxhead.bad{background:var(--warm-soft)}
+.sites{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sites button{padding:9px 0;border-radius:10px;background:#fff;border:1px solid var(--line);font-size:13px}
+.sites button.on{background:var(--deep);border-color:var(--deep);color:#fff;font-weight:600}
+.vial{font-size:14px;margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--bg)}
+details.logd > summary{font-size:15px;margin-top:10px}
 </style>
 </head>
 <body>
 <div class="wrap" id="app"></div>
 <nav class="tabs" id="tabs" hidden><div class="in">
   <button data-tab="today" class="on"><span>🏠</span>Today</button>
+  <button data-tab="sleep"><span>😴</span>Sleep</button>
   <button data-tab="trends"><span>📈</span>Trends</button>
-  <button data-tab="meds"><span>💊</span>Meds</button>
+  <button data-tab="rx"><span>💉</span>Rx</button>
   <button data-tab="care"><span>🩺</span>Care</button>
   <button data-tab="me"><span>⚙️</span>Me</button>
 </div></nav>
 
 <script>
-const VERSION = '2.2';
+const VERSION = '2.3';
 const TURTLE = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">   <defs>     <radialGradient id="tShell" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#7FD1B9"/><stop offset=".6" stop-color="#2A9D8F"/><stop offset="1" stop-color="#1D6F66"/></radialGradient>     <linearGradient id="tSkin" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A8E6CF"/><stop offset="1" stop-color="#5CB89F"/></linearGradient>   </defs>   <g transform="rotate(-18 100 100)">     <!-- flippers -->     <path d="M62 78 C30 52 14 58 10 66 C28 74 44 86 58 98 Z" fill="url(#tSkin)"/>     <path d="M138 78 C170 52 186 58 190 66 C172 74 156 86 142 98 Z" fill="url(#tSkin)"/>     <path d="M70 138 C52 152 46 166 52 172 C62 162 74 154 84 146 Z" fill="url(#tSkin)"/>     <path d="M130 138 C148 152 154 166 148 172 C138 162 126 154 116 146 Z" fill="url(#tSkin)"/>     <!-- head -->     <ellipse cx="100" cy="42" rx="17" ry="20" fill="url(#tSkin)"/>     <circle cx="93" cy="37" r="2.6" fill="#0B3954"/><circle cx="107" cy="37" r="2.6" fill="#0B3954"/>     <!-- shell -->     <ellipse cx="100" cy="104" rx="46" ry="54" fill="url(#tShell)" stroke="#145A52" stroke-width="3"/>     <g fill="none" stroke="#C9F2E3" stroke-width="2.4" stroke-linejoin="round" opacity=".85">       <polygon points="100,78 116,88 116,108 100,118 84,108 84,88"/>       <path d="M100 78 L100 58 M116 88 L134 78 M116 108 L136 120 M100 118 L100 150 M84 108 L64 120 M84 88 L66 78"/>     </g>   </g> </svg> `;
 const FACE = 'data:image/jpeg;base64,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';
 const banner = () => `<div class="banner"><div class="logo"><img src="${FACE}" alt="Mark"><span class="tbadge">${TURTLE}</span></div><div class="btxt"><div class="kicker">Operation:</div><div class="brand">Outlive the Group&nbsp;Chat</div></div><span class="vchip">v${VERSION}</span><svg class="wave" viewBox="0 0 400 40" preserveAspectRatio="none"><path d="M0 22 Q50 6 100 22 T200 22 T300 22 T400 22 V40 H0Z" fill="var(--bg)"/></svg></div>`;
@@ -299,17 +324,19 @@ function render(){
   app.innerHTML = `
     <section class="view on" id="v-today"></section>
     <section class="view" id="v-trends"></section>
-    <section class="view" id="v-meds"></section>
+    <section class="view" id="v-sleep"></section>
+    <section class="view" id="v-rx"></section>
     <section class="view" id="v-care"></section>
     <section class="view" id="v-me"></section>`;
   showTab(location.hash.slice(1) || 'today');
 }
 document.querySelectorAll('#tabs button').forEach(b => b.onclick = () => { location.hash = b.dataset.tab; showTab(b.dataset.tab); });
 function showTab(t){
+  if (t === 'meds') t = 'rx';
   if (!$('#v-'+t)) t = 'today';
   document.querySelectorAll('#tabs button').forEach(b => b.classList.toggle('on', b.dataset.tab===t));
   document.querySelectorAll('section.view').forEach(v => v.classList.toggle('on', v.id==='v-'+t));
-  ({today:loadToday, trends:loadTrends, meds:loadMeds, care:loadCare, me:loadMe}[t]||(()=>{}))();
+  ({today:loadToday, sleep:loadSleep, trends:loadTrends, rx:loadMeds, care:loadCare, me:loadMe}[t]||(()=>{}))();
   window.scrollTo(0,0);
 }
 
@@ -373,8 +400,7 @@ async function adherence(days = 7){
 
 async function checkinCard(today){
   const [{ data: meds }, { data: ev }, { data: meals }, { data: notes }, { data: dr }] = await Promise.all([
-    sb.from('medication').select('id,name,dose,schedule,start_date,end_date,active').eq('active', true).order('name'),
-    sb.from('medication_event').select('id,medication_id,slot,status,marked_at').eq('day', today),
+    Promise.resolve({ data: [] }), Promise.resolve({ data: [] }),      // 2.3: daily meds no longer in the check-in
     sb.from('meal').select('id,meal_type,description,rating,logged_at').eq('day', today).order('logged_at'),
     sb.from('journal_entry').select('id,body,category,logged_at').gte('logged_at', new Date(today+'T00:00').toISOString()).lt('logged_at', new Date(addDays(today,1)+'T00:00').toISOString()).order('logged_at'),
     sb.from('daily_record').select('mood,energy').eq('day', today).maybeSingle()]);
@@ -386,7 +412,7 @@ async function checkinCard(today){
   const dueDoses = doses.filter(d => toMins(d.s.time) <= now + 60);
   const medsDone = dueDoses.every(d => d.e);
   const mood = dr?.mood, energy = dr?.energy;
-  const steps = [['Meds', !doses.length || medsDone], ['Mood', !!mood], ['Energy', !!energy], ['Meal', (meals||[]).length>0]];
+  const steps = [['Mood', !!mood], ['Energy', !!energy], ['Meal', (meals||[]).length>0]];
   const doneN = steps.filter(s=>s[1]).length;
   const bySlot = SLOTS.map(([k,l]) => [k, l, doses.filter(d=>d.s.slot===k)]).filter(x=>x[2].length);
   const doseBtn = d => { const st = d.e?.status; const late = !st && toMins(d.s.time) + 120 < now;
@@ -398,15 +424,6 @@ async function checkinCard(today){
   return `<details class="card ci" id="checkin" ${all && !window.__ciOpen ? '' : 'open'}><summary><h3>✅ ${isPast ? 'Check-in · '+shortDay(today) : "Today's check-in"} <span class="h3r">${all?'all done 🎉':doneN+' of '+steps.length+' done'}</span></h3>
     <div class="steps">${steps.map(([l,ok])=>`<span class="${ok?'ok':''}">${ok?'✓':'○'} ${l}</span>`).join('')}</div></summary>
 
-    <div class="sec">💊 Meds</div>
-    ${doses.length || prn.length ? bySlot.map(([k,l,ds])=>`<div class="slot"><div class="sl">${l}</div>${ds.map(doseBtn).join('')}</div>`).join('')
-      + (doses.length ? `<p class="note">Tap = taken · tap again = skipped · again = clear</p>` : '')
-      : `<p class="note">No medications set up yet. Add them in the <b>Meds</b> tab, or pick from your MyChart list there.</p>`}
-
-    ${prn.length ? `<div class="slot"><div class="sl">As needed</div>${prn.map(m=>{ const e = (ev||[]).find(x=>x.medication_id===m.id && x.slot==='as_needed'); const l = prnLast.find(x=>x.medication_id===m.id && x.day!==today);
-      const d = l ? daysSince(l.day) : null;
-      return `<button class="dose prnb ${e?'taken':''}" data-prn="${m.id}" data-ev="${e?.id||''}"><span class="ck">${e?'✓':'+'}</span><span class="dn"><b>${esc(m.name)}</b>${m.dose?` <em>${esc(m.dose)}</em>`:''}</span>
-        <span class="ds">${e ? 'taken '+new Date(e.marked_at).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'}) : d!=null ? 'last '+(d===1?'yesterday':d+'d ago') : 'log a dose'}</span></button>`; }).join('')}</div>`:''}
     <div class="sec">How's today?</div>
     <div class="row" id="mood">${['😫','😕','😐','🙂','😃'].map((e,i)=>`<button class="pick ${mood===i+1?'on':''}" data-v="${i+1}" aria-label="Mood ${i+1}">${e}</button>`).join('')}</div>
     <div class="sub" style="margin:10px 0 6px">Energy</div>
@@ -463,30 +480,31 @@ function wireCheckin(today){
 
 /* ---------- Meds tab ---------- */
 async function loadMeds(){
-  const el = $('#v-meds');
-  el.innerHTML = `<header class="top"><div class="hello">Meds</div></header><div class="empty">Loading…</div>`;
-  const [{ data: meds }, adh, { data: rx }, { data: supRows }, { data: supLog }, { data: fills }] = await Promise.all([
+  const el = $('#v-rx');
+  el.innerHTML = `<header class="top"><div class="hello">Rx</div></header><div class="empty">Loading…</div>`;
+  const [{ data: meds }, { data: D }, { data: rx }, { data: Wq }, , { data: fills }] = await Promise.all([
     sb.from('medication').select('*').order('active',{ascending:false}).order('name'),
-    adherence(7),
+    sb.from('rx_dose').select('id,medication_id,day,taken_at,dose_mg,units,site,note').order('taken_at',{ascending:false}).limit(300),
     sb.from('clinical_record').select('resource_type,display,recorded_on,resource->>status').in('resource_type',['MedicationRequest','MedicationStatement','MedicationOrder']).not('display','is',null).order('recorded_on',{ascending:false}),
-    sb.from('cpap_supply').select('item,interval_days,last_replaced'),
-    sb.from('cpap_supply_log').select('item,replaced_on').order('replaced_on',{ascending:false}).limit(15),
+    sb.from('body_measurement').select('measured_at,value').eq('kind','weight').order('measured_at',{ascending:false}).limit(200),
+    Promise.resolve({}),
     sb.from('rx_fill').select('medication_id,filled_on,pharmacy,supply_days').order('filled_on',{ascending:false}).limit(20)]);
   const have = new Set((meds||[]).map(m=>m.name.toLowerCase()));
   const sugg = []; const seen = new Set();
   for (const r of rx||[]) { const k = r.display.toLowerCase().trim(); if (seen.has(k) || have.has(k)) continue; seen.add(k);
     sugg.push({ name: r.display, date: r.recorded_on, status: r.status }); }
   const active = (meds||[]).filter(m=>m.active), past = (meds||[]).filter(m=>!m.active);
+  const rxMeds = active.filter(m => m.rx_page).sort((a,b) => (b.every_days||0) - (a.every_days||0));
   const medRow = m => `<div class="medrow"><div><b>${esc(m.name)}</b>${m.dose?` · ${esc(m.dose)}`:''}
-      <div class="sub">${(m.schedule||[]).map(s=>`${slotLabel(s.slot)} ${fmtTime(s.time)}`).join(' · ') || 'As needed'}</div>
+      <div class="sub">${m.rx_page ? (m.every_days ? `Every ${m.every_days} days` : 'As needed') + ' · tracked above' : (m.schedule||[]).map(s=>`${slotLabel(s.slot)} ${fmtTime(s.time)}`).join(' · ') || 'As needed'}</div>
       ${m.instructions?`<div class="src">${esc(m.instructions)}</div>`:''}${m.pharmacy||m.supply_days?`<div class="src">${m.pharmacy?esc(RX_PH[m.pharmacy]):''}${m.pharmacy&&m.supply_days?' · ':''}${m.supply_days?m.supply_days+'-day supply':''}</div>`:''}${m.refill_info?`<div class="src">Refill note: ${esc(m.refill_info)}</div>`:''}</div>
     <div class="medact"><button class="btn ghost sm" data-edit="${m.id}">Edit</button>${m.active?`<button class="x" data-stop="${m.id}" title="Stop taking">Stop</button>`:`<button class="x" data-restart="${m.id}">Restart</button>`}</div></div>`;
   // ----- refills -----
-  const tracked = active.filter(m => m.pharmacy || m.supply_days).map(m => ({ m, st: rxStatus(m) }))
+  const tracked = active.filter(m => (m.pharmacy || m.supply_days) && !(m.rx_page && m.every_days)).map(m => ({ m, st: rxStatus(m) }))
     .sort((a,b) => (a.st?.left ?? 1e9) - (b.st?.left ?? 1e9));
   const untracked = active.filter(m => !m.pharmacy && !m.supply_days && (m.schedule||[]).length);
   const refillRow = ({m, st}) => `<div class="rrow"><div class="rtop"><div>${dot(st?.lvl || 'warn')}<b>${esc(m.name)}</b>
-      <div class="rsub">${m.pharmacy?`<em class="tag ${m.pharmacy}">${m.pharmacy==='optum'?'📦 Optum':m.pharmacy==='walgreens'?'🏪 Walgreens':'Other'}</em>`:''}${m.supply_days?`<em class="tag">${m.supply_days}-day</em>`:''}${m.refills_left!=null?`<em class="tag neutral">${m.refills_left} refill${m.refills_left===1?'':'s'} left</em>`:''}</div>
+      <div class="rsub">${m.pharmacy?`<em class="tag ${m.pharmacy}">${m.pharmacy==='optum'?'📦 Optum':m.pharmacy==='walgreens'?'🏪 Walgreens':m.pharmacy==='compound'?'⚗️ Compound':'Other'}</em>`:''}${m.supply_days?`<em class="tag">${m.supply_days}-day</em>`:''}${m.refills_left!=null?`<em class="tag neutral">${m.refills_left} refill${m.refills_left===1?'':'s'} left</em>`:''}</div>
       <div class="sub" style="margin-top:4px">${st ? st.msg : 'Add the last fill date to start the countdown'}${m.last_filled?` <small>· filled ${fmtDay(m.last_filled)}</small>`:''}</div>
       ${m.refills_left===0?`<div class="err">No refills left — ask your doctor for a new prescription.</div>`:''}</div></div>
     <div class="ract"><input type="date" data-fill-date="${m.id}" value="${localDay()}" max="${localDay()}" aria-label="Fill date"><button class="btn sm" data-fill="${m.id}">✓ Filled</button></div></div>`;
@@ -494,25 +512,14 @@ async function loadMeds(){
     ${tracked.length ? tracked.map(refillRow).join('') : `<p class="empty">No refills tracked yet.</p>`}
     ${untracked.length ? `<p class="note">Not tracked yet: ${untracked.map(m=>esc(m.name)).join(', ')}. Tap <b>Edit</b> on a medication to add its pharmacy and 30/90-day supply.</p>`:''}
     ${(fills||[]).length ? `<details><summary>Fill history</summary><ul class="list">${fills.map(f=>`<li><span>${esc((meds||[]).find(m=>m.id===f.medication_id)?.name||'—')} <i>${f.supply_days?f.supply_days+'-day · ':''}${esc(RX_PH[f.pharmacy]||'')}</i></span><i>${fmtDay(f.filled_on)}</i></li>`).join('')}</ul></details>`:''}
-    <p class="note">Reorder reminders: Optum mail order 14 days before you run out, Walgreens 5 days before.</p></div>`;
-  // ----- CPAP supplies -----
-  const SUP = mergeSupplies(supRows);
-  const cpapCard = `<div class="card"><h3>😷 CPAP supplies</h3>
-    ${SUP.map(s => { const st = supplyStatus(s); return `<div class="rrow"><div class="rtop"><div>${dot(st.lvl)}<b>${esc(s.item)}</b> <span class="rsub" style="display:inline">${esc(s.hint)}</span>
-        <div class="sub" style="margin-top:4px">${st.msg}${s.last_replaced?` <small>· replaced ${fmtDay(s.last_replaced)}</small>`:''}</div>
-        <div class="rsub">Replace every <input class="ival" type="number" inputmode="numeric" min="1" max="730" value="${s.interval_days}" data-ival="${esc(s.item)}" aria-label="${esc(s.item)} interval in days"> days</div></div></div>
-      <div class="ract"><input type="date" data-sup-date="${esc(s.item)}" value="${localDay()}" max="${localDay()}" aria-label="Replaced on"><button class="btn sm" data-sup="${esc(s.item)}">✓ Replaced</button></div></div>`; }).join('')}
-    ${(supLog||[]).length ? `<details><summary>Replacement history</summary><ul class="list">${supLog.map(l=>`<li><span>${esc(l.item)}</span><i>${fmtDay(l.replaced_on)}</i></li>`).join('')}</ul></details>`:''}
-    <p class="note">Starting schedules follow common insurance replacement intervals — change any of them to match your plan or supplier.</p></div>`;
+    <p class="note">Reorder reminders: Optum mail order 14 days before you run out, compounding pharmacy 10, Walgreens 5.</p></div>`;
   el.querySelector('.empty').outerHTML = `
-    ${adh ? `<div class="card"><h3>💊 Last 7 days</h3><div class="big">${adh.pct}<small>%</small></div><div class="goalbar"><i style="width:${adh.pct}%"></i></div>
-      <div class="sub">${adh.done} of ${adh.due} doses taken${adh.pct>=90?' — nicely consistent 🌊':''}</div></div>` : ''}
-    <div class="card"><h3>Your medications</h3>
+    ${rxCards(rxMeds, D||[], Wq||[])}
+    <div class="card"><h3>💊 Daily & other medications</h3>
       ${active.length ? active.map(medRow).join('') : '<p class="empty">None yet. Add one below or pick from your MyChart list.</p>'}
       <button class="btn" id="addMed" style="margin-top:12px">+ Add medication</button>
       <div id="medForm"></div></div>
     ${refillCard}
-    ${cpapCard}
     ${sugg.length ? `<div class="card"><h3>From your MyChart records</h3><p class="sub" style="margin:0 0 8px">Tap to add with a schedule. Only add what you currently take.</p>
       ${sugg.slice(0,25).map((s,i)=>`<div class="medrow"><div>${esc(s.name)}<div class="src">${s.date?new Date(s.date+'T12:00').toLocaleDateString('en-US',{month:'short',year:'numeric'}):''}${s.status?` · ${esc(s.status)}`:''}</div></div>
         <div class="medact"><button class="btn ghost sm" data-sugg="${i}">+ Add</button></div></div>`).join('')}</div>` : ''}
@@ -528,10 +535,12 @@ async function loadMeds(){
       </div>
       <label>Instructions<input id="fInst" value="${esc(m.instructions||'')}" placeholder="e.g. with food"></label>
       <div class="flab">Refills</div>
-      <div class="seg" id="fPharm">${[['optum','📦 Optum (mail)'],['walgreens','🏪 Walgreens'],['other','Other']].map(([k,l])=>`<button type="button" data-v="${k}" class="${m.pharmacy===k?'on':''}">${l}</button>`).join('')}</div>
+      <div class="seg" id="fPharm">${[['optum','📦 Optum'],['walgreens','🏪 Walgreens'],['compound','⚗️ Compound'],['other','Other']].map(([k,l])=>`<button type="button" data-v="${k}" class="${m.pharmacy===k?'on':''}">${l}</button>`).join('')}</div>
       <div class="seg" id="fSupply">${[30,90].map(d=>`<button type="button" data-v="${d}" class="${m.supply_days===d?'on':''}">${d}-day supply</button>`).join('')}</div>
       <div class="grid2"><label>Last filled<input id="fFilled" type="date" value="${m.last_filled||''}" max="${localDay()}"></label>
         <label>Refills left<input id="fLeft" type="number" inputmode="numeric" min="0" max="99" value="${m.refills_left ?? ''}" placeholder="optional"></label></div>
+      <label class="chk prn"><input type="checkbox" id="fRxPage" ${m.rx_page?'checked':''}> Track doses on the Rx page (weekly shot or as-needed)</label>
+      <label>Repeats every … days (blank = as needed)<input id="fEvery" type="number" inputmode="numeric" min="1" max="90" value="${m.every_days ?? ''}" placeholder="e.g. 7"></label>
       <label>Refill notes<input id="fRefill" value="${esc(m.refill_info||'')}" placeholder="e.g. Rx #, auto-refill on"></label>
       <div class="row" style="margin-top:10px"><button class="btn" id="fSave">Save</button><button class="btn ghost" id="fCancel">Cancel</button></div></div>`;
     $('#fCancel').onclick = () => $('#medForm').innerHTML = '';
@@ -543,7 +552,7 @@ async function loadMeds(){
       const schedule = $('#fPrn').checked ? [] : SLOTS.filter(([k]) => $(`#medForm input[data-slot="${k}"]`).checked).map(([k]) => ({ slot:k, time: $(`#medForm input[data-time="${k}"]`).value || '08:00' }));
       const row = { user_id:user.id, name, dose:$('#fDose').value.trim()||null, schedule, instructions:$('#fInst').value.trim()||null, refill_info:$('#fRefill').value.trim()||null, active:true,
         pharmacy: $('#fPharm .on')?.dataset.v || null, supply_days: +($('#fSupply .on')?.dataset.v || 0) || null,
-        last_filled: $('#fFilled').value || null, refills_left: $('#fLeft').value === '' ? null : Math.max(0, parseInt($('#fLeft').value, 10) || 0) };
+        last_filled: $('#fFilled').value || null, rx_page: $('#fRxPage').checked, every_days: parseInt($('#fEvery').value,10) || null, refills_left: $('#fLeft').value === '' ? null : Math.max(0, parseInt($('#fLeft').value, 10) || 0) };
       const { error } = m.id ? await sb.from('medication').update(row).eq('id', m.id) : await sb.from('medication').insert({ ...row, start_date: localDay() });
       if (error) return alert('Could not save: '+error.message);
       loadMeds();
@@ -564,20 +573,7 @@ async function loadMeds(){
       sb.from('rx_fill').insert({ user_id:user.id, medication_id:m.id, filled_on:d, pharmacy:m.pharmacy, supply_days:m.supply_days }) ]);
     if (u.error || f.error) { b.disabled = false; return alert('Could not save: ' + (u.error || f.error).message); }
     loadMeds(); });
-  // CPAP: replaced + interval edits
-  el.querySelectorAll('[data-sup]').forEach(b => b.onclick = async () => {
-    const item = b.dataset.sup, s = SUP.find(x => x.item === item), d = el.querySelector(`[data-sup-date="${item}"]`).value || localDay();
-    b.disabled = true;
-    const [u, l] = await Promise.all([ sb.from('cpap_supply').upsert({ user_id:user.id, item, interval_days:s.interval_days, last_replaced:d, sort:s.sort, updated_at:new Date().toISOString() }, { onConflict:'user_id,item' }),
-      sb.from('cpap_supply_log').insert({ user_id:user.id, item, replaced_on:d }) ]);
-    if (u.error || l.error) { b.disabled = false; return alert('Could not save: ' + (u.error || l.error).message); }
-    loadMeds(); });
-  el.querySelectorAll('[data-ival]').forEach(i => i.onchange = async () => {
-    const item = i.dataset.ival, s = SUP.find(x => x.item === item), v = parseInt(i.value, 10);
-    if (!(v > 0)) { i.value = s.interval_days; return; }
-    const { error } = await sb.from('cpap_supply').upsert({ user_id:user.id, item, interval_days:v, last_replaced:s.last_replaced, sort:s.sort, updated_at:new Date().toISOString() }, { onConflict:'user_id,item' });
-    if (error) return alert('Could not save: ' + error.message);
-    loadMeds(); });
+  wireRx(el, rxMeds, D||[], loadMeds);
 }
 
 /* ---------- today ---------- */
@@ -612,7 +608,7 @@ function weightTrend(W, endDay, days = 30){
   const num = pts.reduce((s,[x,y]) => s + (x-mx)*(y-my), 0), den = pts.reduce((s,[x]) => s + (x-mx)**2, 0);
   return den ? num/den * 7*864e5 : null;
 }
-function weightChart(W, goal, endDay){
+function weightChart(W, goal, endDay, markers = []){
   const end = new Date(endDay+'T23:59').getTime(), start = end - 90*864e5;
   const pts = W.map(w => [new Date(w.measured_at).getTime(), +w.value]).filter(([t]) => t >= start && t <= end).reverse();
   if (pts.length < 2) return `<p class="note">Need at least two weigh-ins in the last 90 days to draw a trend.</p>`;
@@ -626,11 +622,13 @@ function weightChart(W, goal, endDay){
     <polyline points="${line}" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>
     ${pts.map(([t,v])=>`<circle cx="${X(t).toFixed(1)}" cy="${Y(v).toFixed(1)}" r="2" fill="var(--accent)"/>`).join('')}
     <circle cx="${X(last[0]).toFixed(1)}" cy="${Y(last[1]).toFixed(1)}" r="4" fill="var(--accent)"/>
+    ${markers.map(mk => { const t = new Date(mk.d+'T12:00').getTime(); if (t < start || t > end) return ''; const x = X(t).toFixed(1);
+      return `<line x1="${x}" x2="${x}" y1="${pad}" y2="${h-12}" stroke="var(--deep)" stroke-dasharray="2 3" opacity=".6"/><text x="${x}" y="${h-14}" font-size="9" fill="var(--deep)" text-anchor="middle">💉${esc(mk.label)}</text>`; }).join('')}
     <text x="${pad}" y="${h-1}" font-size="10" fill="var(--muted)">90 days ago</text><text x="${pad}" y="11" font-size="10" fill="var(--muted)">${hi} lb</text></svg>`;
 }
 
-const RX_PH = { optum:'Optum mail order', walgreens:'Walgreens', other:'Other pharmacy' };
-const RX_LEAD = { optum:14, walgreens:5, other:7 };          // days before running out to reorder
+const RX_PH = { optum:'Optum mail order', walgreens:'Walgreens', compound:'Compounding pharmacy', other:'Other pharmacy' };
+const RX_LEAD = { optum:14, walgreens:5, compound:10, other:7 };          // days before running out to reorder
 function rxStatus(m){
   if (!m.last_filled || !m.supply_days) return null;
   const runOut = addDays(m.last_filled, m.supply_days), orderBy = addDays(runOut, -(RX_LEAD[m.pharmacy] || 7));
@@ -649,59 +647,304 @@ function supplyStatus(s){
 }
 const mergeSupplies = rows => CPAP_ITEMS.map(([item, interval_days, hint], i) => ({ item, hint, sort:i, interval_days, last_replaced:null, ...(rows||[]).find(r=>r.item===item) }));
 
-/* ---------- today ---------- */
-async function loadToday(){
-  const el = $('#v-today'), today = localDay(), h = new Date().getHours();
-  const day = viewDay && viewDay < today ? viewDay : today, isToday = day === today, prev = addDays(day, -1);
-  if (!isToday) viewDay = day; else viewDay = null;
-  const endEx = isToday ? today : addDays(day, 1);           // "complete days" end before this
-  const greet = !isToday ? 'Looking back' : h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : 'Good evening';
-  const name = (user.user_metadata?.full_name || '').split(' ')[0] || '';
-  el.innerHTML = banner() + `<div class="empty">Loading…</div>`;
-  const from30 = addDays(day,-31);
-  const [sleep, cpap, act, heart, wk, wts, ht, prefQ, aiQ, drs, medsQ, supQ] = await Promise.all([
-    sb.from('sleep_night').select('night,source,asleep_min,deep_min,rem_min,bedtime,wake_time').gte('night',from30).lte('night',day).order('night',{ascending:false}),
-    sb.from('cpap_session').select('night,usage_hours,ahi,myair_score').gte('night',from30).lte('night',day).order('night',{ascending:false}),
-    sb.from('daily_activity').select('day,steps,exercise_min').gte('day',addDays(day,-15)).lte('day',day).order('day',{ascending:false}),
-    sb.from('heart_daily').select('day,resting_hr,hrv_sdnn,hr_max,spo2_pct').gte('day',from30).lte('day',day).order('day',{ascending:false}),
-    sb.from('workout').select('started_at,activity,duration_min,distance_mi').gte('started_at',dayStartISO(addDays(endEx,-14))).lt('started_at',dayStartISO(addDays(day,1))).order('started_at',{ascending:false}),
-    sb.from('body_measurement').select('measured_at,value').eq('kind','weight').lt('measured_at',dayStartISO(addDays(day,1))).order('measured_at',{ascending:false}).limit(200),
-    sb.from('clinical_record').select('recorded_on,resource').eq('resource_type','Observation').eq('display','Height').order('recorded_on',{ascending:false}).limit(1),
-    sb.from('user_pref').select('weight_goal_lb,weight_goal_date').maybeSingle(),
-    sb.from('ai_summary').select('body,created_at').eq('day',day).maybeSingle(),
-    sb.from('daily_record').select('day,mood,energy').in('day',[prev,day]),
-    isToday ? sb.from('medication').select('id,name,pharmacy,supply_days,last_filled').eq('active',true) : Promise.resolve({data:[]}),
-    isToday ? sb.from('cpap_supply').select('item,interval_days,last_replaced') : Promise.resolve({data:[]})
-  ]);
-  const goal = prefQ.data?.weight_goal_lb != null ? +prefQ.data.weight_goal_lb : null;
+/* ---------- 2.3 helpers ---------- */
+const sd = a => { if (a.length < 2) return null; const m = avg(a); return Math.sqrt(avg(a.map(x => (x-m)**2))); };
+const pct = (a, b) => b ? Math.round(a/b*100) : null;
+// simple line chart. pts: [{d:'YYYY-MM-DD', v:number}] oldest→newest. refs: [{v, label}]
+function lineChart(pts, { refs = [], h = 92, fmt = v => v, color = 'var(--accent)' } = {}){
+  pts = pts.filter(p => p.v != null && !isNaN(p.v));
+  if (pts.length < 2) return `<p class="note">Not enough data for a chart yet.</p>`;
+  const w = 320, pad = 6, ys = pts.map(p=>p.v).concat(refs.map(r=>r.v));
+  const lo = Math.min(...ys), hi = Math.max(...ys), r = (hi-lo) || 1;
+  const t0 = new Date(pts[0].d+'T12:00').getTime(), t1 = new Date(pts.at(-1).d+'T12:00').getTime(), span = (t1-t0) || 1;
+  const X = d => pad + (new Date(d+'T12:00').getTime()-t0)/span*(w-2*pad), Y = v => pad + (hi-v)/r*(h-2*pad-10);
+  const line = pts.map(p => `${X(p.d).toFixed(1)},${Y(p.v).toFixed(1)}`).join(' ');
+  const last = pts.at(-1);
+  return `<svg viewBox="0 0 ${w} ${h}" class="wchart" aria-hidden="true">
+    ${refs.map(rf => `<line x1="${pad}" x2="${w-pad}" y1="${Y(rf.v).toFixed(1)}" y2="${Y(rf.v).toFixed(1)}" stroke="var(--warm)" stroke-dasharray="4 4" stroke-width="1" opacity=".7"/><text x="${w-pad}" y="${(Y(rf.v)-3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--down)">${rf.label}</text>`).join('')}
+    <polyline points="${line}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(last.d).toFixed(1)}" cy="${Y(last.v).toFixed(1)}" r="3.5" fill="${color}"/>
+    <text x="${pad}" y="${h-1}" font-size="9" fill="var(--muted)">${fmtDay(pts[0].d)}</text><text x="${w-pad}" y="${h-1}" font-size="9" text-anchor="end" fill="var(--muted)">${fmtDay(last.d)} · ${fmt(last.v)}</text></svg>`;
+}
+// roll daily points into weekly averages (for long periods)
+const weekly = pts => { const by = {}; for (const p of pts) { if (p.v==null) continue; const d = new Date(p.d+'T12:00'); d.setDate(d.getDate()-d.getDay()); const k = localDay(d); (by[k] ??= []).push(p.v); }
+  return Object.entries(by).sort().map(([d,v]) => ({ d, v: avg(v) })); };
+const chg = (cur, prev, lowerBetter, unit = '', digits = 0, eps = 0) => { if (cur==null || prev==null) return '';
+  const d = cur - prev; if (Math.abs(d) <= eps) return `<span class="chip neutral">same as before</span>`;
+  const good = lowerBetter ? d < 0 : d > 0; return `<span class="chip ${good?'':'dn'}">${d<0?'↓':'↑'} ${Math.abs(d).toFixed(digits)}${unit} vs prior</span>`; };
 
-  // ----- header: age, height, weight (+ trend & goal) -----
-  const cm = +(ht.data?.[0]?.resource?.valueQuantity?.value || 0);
-  const inches = cm ? Math.round(cm/2.54) : null;
-  const heightTxt = inches ? `${Math.floor(inches/12)}′${inches%12}″` : null;
-  const W = wts.data || [];
-  const wLast = W[0], wPrev = W.find(w => localDay(new Date(w.measured_at)) !== localDay(new Date(wLast?.measured_at||0)));
-  const wDays = wLast ? Math.round((new Date(day) - new Date(localDay(new Date(wLast.measured_at))))/86400000) : null;
-  const wChg = (wLast && wPrev) ? +wLast.value - +wPrev.value : null;
-  const slope = weightTrend(W, day);
-  const toGo = (goal != null && wLast) ? +wLast.value - goal : null;
-  const towardGoal = slope != null && toGo != null && Math.abs(toGo) >= 0.5 && Math.sign(slope) === -Math.sign(toGo) && Math.abs(slope) >= 0.1;
-  const eta = towardGoal ? addDays(day, Math.round(Math.abs(toGo/slope)*7)) : null;
-  const weightCard = `<button class="wpill" id="wpill" aria-expanded="false">${wLast ? `<div class="wv">⚖️ ${(+wLast.value).toFixed(1)}<small>lb</small></div>
-      <div class="wl">${fmtDay(localDay(new Date(wLast.measured_at)))} · ${wDays>0?wDays+'d ago':isToday?'today':'that day'}</div>
-      ${slope!=null ? `<div class="wc">${slope<-0.05?'↘':slope>0.05?'↗':'→'} ${Math.abs(slope).toFixed(1)} lb/wk <span class="wl">30d</span></div>`
-        : wChg!=null ? `<div class="wc">${wChg<0?'↓':wChg>0?'↑':'→'} ${Math.abs(wChg).toFixed(1)} lb vs prior</div>`:''}
-      ${goal!=null ? `<div class="wg">🎯 ${goal}${toGo!=null ? Math.abs(toGo)<0.5 ? ' · at goal 🎉' : ` · ${Math.abs(toGo).toFixed(1)} to go` : ''}</div>` : `<div class="wl">tap to set a goal</div>`}
-      ${isToday && wDays>7 ? `<div class="wn">Time to weigh in</div>`:''}` : `<div class="wl">⚖️ No weigh-ins yet</div>`}</button>`;
-  const weightDetail = `<div class="card" id="wdetail" hidden><h3>⚖️ Weight · last 90 days</h3>${weightChart(W, goal, day)}
-      <p class="msg">${slope!=null ? `30-day trend: <b>${slope<0?'down':slope>0?'up':'flat at'} ${Math.abs(slope).toFixed(1)} lb a week</b>.` : 'Not enough recent weigh-ins for a trend yet.'}
-        ${goal!=null && toGo!=null ? Math.abs(toGo)<0.5 ? ' You are at your goal 🎉' : towardGoal ? ` At this pace you reach <b>${goal} lb around ${new Date(eta+'T12:00').toLocaleDateString('en-US',{month:'short',year:'numeric'})}</b>${prefQ.data?.weight_goal_date?` (target ${fmtDay(prefQ.data.weight_goal_date)})`:''}.` : ` ${Math.abs(toGo).toFixed(1)} lb from your goal — the trend isn't heading there yet.` : ''}</p>
-      <div class="mform"><label>Goal weight (lb)<input id="gLb" type="number" inputmode="decimal" step="0.5" min="80" max="400" value="${goal ?? ''}" placeholder="e.g. 185"></label>
-        <label>Target date (optional)<input id="gDate" type="date" value="${prefQ.data?.weight_goal_date || ''}"></label>
-        <div class="row"><button class="btn" id="gSave">Save goal</button>${goal!=null?`<button class="btn ghost" id="gClear">Clear</button>`:''}</div></div></div>`;
+/* ---------- 2.3 evening log: drinks & smoking ---------- */
+const DRINK_LBL = ['0','1','2','3','4+'];
+function eveningCard(evDay, row, label){
+  const d = row?.drinks, sm = row ? (row.smoked ? (row.smoke_type || 'yes') : row.smoked === false ? 'no' : null) : null;
+  return `<div class="card" id="evening" data-day="${evDay}"><h3>🌙 ${label} <span class="h3r">${row && (d!=null || sm) ? 'saved ✓' : 'one tap each'}</span></h3>
+    <div class="sub" style="margin:0 0 6px">🍺 Drinks</div>
+    <div class="row" id="evDrinks">${DRINK_LBL.map((l,i)=>`<button class="pick num ${d!=null && Math.min(d,4)===i?'on':''}" data-v="${i}">${l}</button>`).join('')}</div>
+    <div class="sub" style="margin:12px 0 6px">💨 Smoked</div>
+    <div class="row seg" id="evSmoke">${[['no','No'],['tobacco','Tobacco'],['cannabis','Cannabis'],['both','Both']].map(([k,l])=>`<button data-v="${k}" class="${sm===k?'on':''}">${l}</button>`).join('')}</div>
+    ${d > 0 ? `<div class="mline" style="margin-top:12px"><span class="sub" style="margin:0">Last drink around</span><input type="time" id="evLast" value="${esc(row?.last_drink||'')}" style="flex:none;width:130px"></div>`:''}
+    <p class="note">Shows up on the Sleep tab next to that night's sleep, CPAP and next-morning heart numbers.</p></div>`;
+}
+function wireEvening(after){
+  const card = $('#evening'); if (!card) return; const evDay = card.dataset.day;
+  const save = async patch => { const { error } = await sb.from('evening_log').upsert({ user_id:user.id, day:evDay, ...patch, updated_at:new Date().toISOString() }, { onConflict:'user_id,day' });
+    if (error) return alert('Could not save: '+error.message); after(); };
+  $('#evDrinks').onclick = e => { const b = e.target.closest('.pick'); if (b) save({ drinks: +b.dataset.v }); };
+  $('#evSmoke').onclick = e => { const b = e.target.closest('button'); if (!b) return; const v = b.dataset.v;
+    save(v === 'no' ? { smoked:false, smoke_type:null } : { smoked:true, smoke_type:v }); };
+  if ($('#evLast')) $('#evLast').onchange = e => save({ last_drink: e.target.value || null });
+}
 
-  // ----- sleep -----
-  const N = sleepNights(sleep.data||[], cpap.data||[]);
+/* ---------- 2.3 CPAP supplies (Sleep tab) ---------- */
+function suppliesCard(supRows, supLog){
+  const SUP = mergeSupplies(supRows);
+  return { SUP, html: `<div class="card" id="supplies"><h3>😷 CPAP supplies</h3>
+    ${SUP.map(s => { const st = supplyStatus(s); return `<div class="rrow"><div class="rtop"><div>${dot(st.lvl)}<b>${esc(s.item)}</b> <span class="rsub" style="display:inline">${esc(s.hint)}</span>
+        <div class="sub" style="margin-top:4px">${st.msg}${s.last_replaced?` <small>· replaced ${fmtDay(s.last_replaced)}</small>`:''}</div>
+        <div class="rsub">Replace every <input class="ival" type="number" inputmode="numeric" min="1" max="730" value="${s.interval_days}" data-ival="${esc(s.item)}" aria-label="${esc(s.item)} interval in days"> days</div></div></div>
+      <div class="ract"><input type="date" data-sup-date="${esc(s.item)}" value="${localDay()}" max="${localDay()}" aria-label="Replaced on"><button class="btn sm" data-sup="${esc(s.item)}">✓ Replaced</button></div></div>`; }).join('')}
+    ${(supLog||[]).length ? `<details><summary>Replacement history</summary><ul class="list">${supLog.map(l=>`<li><span>${esc(l.item)}</span><i>${fmtDay(l.replaced_on)}</i></li>`).join('')}</ul></details>`:''}
+    <p class="note">Starting schedules follow common insurance replacement intervals — change any of them to match your plan or supplier.</p></div>` };
+}
+function wireSupplies(el, SUP, reload){
+  el.querySelectorAll('[data-sup]').forEach(b => b.onclick = async () => {
+    const item = b.dataset.sup, s = SUP.find(x => x.item === item), d = el.querySelector(`[data-sup-date="${item}"]`).value || localDay();
+    b.disabled = true;
+    const [u, l] = await Promise.all([ sb.from('cpap_supply').upsert({ user_id:user.id, item, interval_days:s.interval_days, last_replaced:d, sort:s.sort, updated_at:new Date().toISOString() }, { onConflict:'user_id,item' }),
+      sb.from('cpap_supply_log').insert({ user_id:user.id, item, replaced_on:d }) ]);
+    if (u.error || l.error) { b.disabled = false; return alert('Could not save: ' + (u.error || l.error).message); }
+    reload(); });
+  el.querySelectorAll('[data-ival]').forEach(i => i.onchange = async () => {
+    const item = i.dataset.ival, s = SUP.find(x => x.item === item), v = parseInt(i.value, 10);
+    if (!(v > 0)) { i.value = s.interval_days; return; }
+    const { error } = await sb.from('cpap_supply').upsert({ user_id:user.id, item, interval_days:v, last_replaced:s.last_replaced, sort:s.sort, updated_at:new Date().toISOString() }, { onConflict:'user_id,item' });
+    if (error) return alert('Could not save: ' + error.message);
+    reload(); });
+}
+
+/* ---------- 2.3 Sleep tab ---------- */
+let sleepPeriod = 30;
+async function loadSleep(){
+  const el = $('#v-sleep'), today = localDay(), P = sleepPeriod;
+  el.innerHTML = `<header class="top"><div class="hello">Sleep</div></header><div class="empty">Loading…</div>`;
+  const from = addDays(today, -(P <= 90 ? P*2 : P) - 1), slFrom = addDays(today, -Math.min(P <= 90 ? P*2 : P, 180) - 1);
+  const [sl, cp, evq, act, hr, drq, wk, sup, supLog, notes] = await Promise.all([
+    sb.from('sleep_night').select('night,source,asleep_min,deep_min,rem_min,bedtime,wake_time').gte('night',slFrom).order('night',{ascending:false}),
+    sb.from('cpap_session').select('night,usage_hours,ahi,leak_50,leak_95,mask_on_off,myair_score').gte('night',from).order('night',{ascending:false}),
+    sb.from('evening_log').select('day,drinks,smoked,smoke_type').gte('day',addDays(today,-366)),
+    sb.from('daily_activity').select('day,steps,exercise_min').gte('day',from),
+    sb.from('heart_daily').select('day,resting_hr,hrv_sdnn').gte('day',from),
+    sb.from('daily_record').select('day,mood,energy').gte('day',from),
+    sb.from('workout').select('started_at').gte('started_at',dayStartISO(from)),
+    sb.from('cpap_supply').select('item,interval_days,last_replaced'),
+    sb.from('cpap_supply_log').select('item,replaced_on').order('replaced_on',{ascending:false}).limit(15),
+    sb.from('journal_entry').select('body,category,logged_at').in('category',['cpap','sleep']).gte('logged_at',dayStartISO(addDays(today,-30))).order('logged_at',{ascending:false}).limit(10)]);
+  const C = cp.data||[], N = sleepNights(sl.data||[], C);
+  const SL = buildSleep(N, today, true);
+  const start = addDays(today, -P), pstart = addDays(today, -2*P);
+  const inCur = d => d > start && d <= today, inPrev = d => d > pstart && d <= start;
+  const per = `<div class="seg periods" id="sPer">${[[7,'7 days'],[30,'30 days'],[90,'90 days'],[365,'1 year']].map(([v,l])=>`<button data-v="${v}" class="${v===P?'on':''}">${l}</button>`).join('')}</div>`;
+
+  // ----- CPAP -----
+  const lastC = C[0]?.night;
+  const cpapStats = f => { const r = C.filter(c => f(c.night)), used = r.filter(c => c.usage_hours > 0);
+    return { n: r.length, use: avg(used.map(c=>+c.usage_hours)), ahi: avg(used.filter(c=>c.ahi!=null).map(c=>+c.ahi)), leak: avg(used.filter(c=>c.leak_95!=null).map(c=>+c.leak_95)),
+      onoff: avg(used.filter(c=>c.mask_on_off!=null).map(c=>+c.mask_on_off)), ok4: r.filter(c => c.usage_hours >= 4).length }; };
+  const cs = cpapStats(inCur), ps = P <= 90 ? cpapStats(inPrev) : null;
+  const endC = lastC && lastC < today ? lastC : today;
+  const daysCovered = lastC ? Math.max(1, Math.round((new Date(endC+'T12:00') - new Date(start+'T12:00'))/864e5)) : 0;
+  const comp = pct(cs.ok4, daysCovered);
+  const daily = k => C.filter(c => inCur(c.night)).map(c => ({ d:c.night, v: c[k]!=null ? +c[k] : null })).reverse();
+  const ser = k => P > 90 ? weekly(daily(k)) : daily(k);
+  const stale = lastC ? daysSince(lastC) : null;
+  const cpapCard = `<div class="card"><h3>🫁 CPAP <span class="h3r">${P===365?'last year':'last '+P+' days'}</span></h3>
+    ${cs.n ? `<div class="tiles">
+      <div class="tile"><span>Mask-on / night</span><b>${hmm(cs.use*60)}</b>${ps?chg(cs.use*60, ps.use*60, false, 'm', 0, 5):''}</div>
+      <div class="tile"><span>4h+ nights</span><b>${comp ?? '—'}<small>%</small></b><em>${cs.ok4} of ${daysCovered} nights</em></div>
+      <div class="tile"><span>AHI (events/hr)</span><b>${cs.ahi!=null?cs.ahi.toFixed(1):'—'}</b>${ps?chg(cs.ahi, ps.ahi, true, '', 1, 0.2):''}</div>
+      <div class="tile"><span>Leak (95th %)</span><b>${cs.leak!=null?cs.leak.toFixed(1):'—'}<small>L/min</small></b>${ps?chg(cs.leak, ps.leak, true, '', 1, 0.5):''}</div></div>
+      ${cs.onoff!=null ? `<p class="msg">Mask on/off about <b>${cs.onoff.toFixed(1)} times a night</b>${ps?.onoff!=null?` (${ps.onoff.toFixed(1)} the period before)`:''}.</p>`:''}
+      <div class="sub" style="margin-top:12px">Mask-on hours${P>90?' · weekly average':''}</div>${lineChart(ser('usage_hours'), { refs:[{v:4,label:'4h'},{v:7,label:'7h'}], fmt: v=>hmm(v*60) })}
+      <div class="sub" style="margin-top:8px">AHI${P>90?' · weekly average':''}</div>${lineChart(ser('ahi'), { refs:[{v:5,label:'5'}], fmt: v=>(+v).toFixed(1), color:'var(--deep)' })}
+      <div class="sub" style="margin-top:8px">Leak, 95th percentile${P>90?' · weekly average':''}</div>${lineChart(ser('leak_95'), { fmt: v=>(+v).toFixed(1), color:'#3FA7A0' })}
+      <p class="note">4h+ nights is the usual insurance compliance measure (they typically look for 70%+). AHI under 5 is the common treatment target — ask your sleep doctor what yours should be.${ps?' "vs prior" compares with the '+P+' days before.':''}</p>`
+    : `<p class="empty">No CPAP nights in this period.</p>`}
+    ${stale!=null && stale > 3 ? `<div class="err">CPAP data ends ${fmtDay(lastC)} — import a new myAir export in Me → Import.</div>`:''}</div>`;
+
+  // ----- consistency -----
+  const curN = N.filter(n => inCur(n.night));
+  const timed = curN.map(n => timing(n)).filter(Boolean);
+  const bedM = timed.map(t => sinceSix(t.bedtime)), wakeM = timed.filter(t=>t.wake_time).map(t => sinceSix(t.wake_time));
+  const durs = curN.filter(n=>n.duration!=null), hit = durs.filter(n=>n.duration>=SLEEP_TARGET).length;
+  const consCard = `<div class="card"><h3>🕰️ Rhythm <span class="h3r">${P===365?'last year':'last '+P+' days'}</span></h3>
+    ${durs.length ? `<div class="tiles">
+      <div class="tile"><span>Average sleep</span><b>${hmm(avg(durs.map(n=>n.duration)))}</b><em>${durs.length} nights</em></div>
+      <div class="tile"><span>7h+ nights</span><b>${hit}<small>of ${durs.length}</small></b><em>${pct(hit,durs.length)}%</em></div>
+      <div class="tile"><span>Usual bedtime</span><b>${bedM.length?clockFromSix(median(bedM)):'—'}</b><em>${sd(bedM)!=null?'varies ±'+Math.round(sd(bedM))+' min':''}</em></div>
+      <div class="tile"><span>Usual wake</span><b>${wakeM.length?clockFromSix(median(wakeM)):'—'}</b><em>${sd(wakeM)!=null?'varies ±'+Math.round(sd(wakeM))+' min':''}</em></div></div>
+      <p class="note">A steadier bedtime (smaller ±) tends to go with steadier sleep. Bed/wake times come from Oura, Sleep Cycle or your Watch.</p>`
+    : '<p class="empty">No sleep in this period.</p>'}</div>`;
+
+  // ----- lookups for "what goes with better sleep" (night D+1 follows day/evening D) -----
+  const nightOf = d => N.find(n => n.night === addDays(d,1));
+  const cpOf = d => C.find(c => c.night === addDays(d,1));
+  const H = hr.data||[], DR = drq.data||[], A = act.data||[];
+  const hOf = d => H.find(r => r.day === addDays(d,1)), drOf = d => DR.find(r => r.day === addDays(d,1));
+  const EV = evq.data||[];
+  const metrics = [
+    ['Sleep', d => nightOf(d)?.duration, v => hmm(v), +1],
+    ['AHI', d => cpOf(d)?.ahi, v => (+v).toFixed(1), -1],
+    ['Leak', d => cpOf(d)?.leak_95, v => (+v).toFixed(1), -1],
+    ['HRV next AM', d => hOf(d)?.hrv_sdnn, v => Math.round(v)+' ms', +1],
+    ['Resting HR', d => hOf(d)?.resting_hr, v => Math.round(v), -1],
+    ['Mood next day', d => drOf(d)?.mood, v => (+v).toFixed(1), +1]];
+  const groupTable = (groups) => { // groups: [label, [days]]
+    const rows = metrics.map(([l,f,fm,dir]) => { const vals = groups.map(([,ds]) => { const v = ds.map(f).filter(x=>x!=null).map(Number); return { a: avg(v), n: v.length }; });
+      return vals.some(v=>v.n) ? `<tr><td>${l}</td>${vals.map((v,i) => { const base = vals[0].a; const cls = i && v.a!=null && base!=null ? ((v.a-base)*dir < 0 ? 'worse' : 'better') : '';
+        return `<td class="${cls}">${v.a!=null?fm(v.a):'—'}<small> ${v.n||''}</small></td>`; }).join('')}</tr>` : ''; }).join('');
+    return `<div class="scroll"><table class="cmp tight gt"><tr><th></th>${groups.map(([l,ds])=>`<th>${l}<br><small>${ds.length} eve</small></th>`).join('')}</tr>${rows}</table></div>`; };
+  const g0 = EV.filter(e=>e.drinks===0).map(e=>e.day), g1 = EV.filter(e=>e.drinks===1).map(e=>e.day), g2 = EV.filter(e=>e.drinks>=2).map(e=>e.day);
+  const s0 = EV.filter(e=>e.smoked===false).map(e=>e.day), s1 = EV.filter(e=>e.smoked===true).map(e=>e.day);
+  const logged = EV.filter(e => e.drinks!=null || e.smoked!=null).length;
+  const enough = (a,b) => a.length >= 3 && b.length >= 3;
+  const habitsCard = `<div class="card"><h3>🍺💨 Drinks & smoking vs your sleep</h3>
+    ${logged < 3 ? `<p class="note" style="margin-top:0">Log your evenings on Today (the 🌙 card after 6 PM, or the next morning). Once a few nights each way are in, this compares that night's sleep, CPAP and next-morning heart numbers. <b>${logged}</b> logged so far.</p>`
+    : `${enough(g0, g1.concat(g2)) ? `<div class="sub">By drinks that evening</div>${groupTable([['None',g0],...(g1.length?[['1',g1]]:[]),...(g2.length?[['2+',g2]]:[])])}` : `<p class="note">Need at least 3 evenings with and 3 without drinks to compare (have ${g0.length} without, ${g1.length+g2.length} with).</p>`}
+      ${enough(s0, s1) ? `<div class="sub" style="margin-top:12px">By smoking that evening</div>${groupTable([['No',s0],['Yes',s1]])}` : `<p class="note">Need at least 3 evenings each way for smoking (have ${s0.length} no, ${s1.length} yes).</p>`}
+      <p class="note">Small numbers are how many nights each average uses. <span class="worse">Orange</span> = worse than the first column, <span class="better">teal</span> = better. These are patterns in your own data, not proof of cause.</p>`}</div>`;
+
+  // ----- what goes with better sleep -----
+  const durAfter = ds => ds.map(d => nightOf(d)?.duration).filter(x=>x!=null);
+  const pair = (label, aL, aDays, bL, bDays) => { const a = durAfter(aDays), b = durAfter(bDays); if (a.length < 3 || b.length < 3) return '';
+    const d = avg(a) - avg(b); return `<li><span><b>${label}</b><br><i>${aL}: ${hmm(avg(a))} (${a.length}) · ${bL}: ${hmm(avg(b))} (${b.length})</i></span><span class="chip ${Math.abs(d)<10?'neutral':d>0?'':'dn'}">${Math.abs(d)<10?'about the same':(d>0?'+':'−')+Math.round(Math.abs(d))+' min'}</span></li>`; };
+  const days = A.map(r=>r.day);
+  const stepHi = A.filter(r=>+r.steps>=6000).map(r=>r.day), stepLo = A.filter(r=>+r.steps<6000).map(r=>r.day);
+  const wDays = new Set((wk.data||[]).map(w=>localDay(new Date(w.started_at))));
+  const wkY = days.filter(d=>wDays.has(d)), wkN = days.filter(d=>!wDays.has(d));
+  const bedEarly = [], bedLate = []; for (const n of N) { const t = timing(n); if (!t?.bedtime || n.duration==null) continue; (sinceSix(t.bedtime) < 360 ? bedEarly : bedLate).push(addDays(n.night,-1)); }
+  const assoc = [pair('6,000+ steps that day', '6k+', stepHi, 'under 6k', stepLo), pair('Workout that day', 'workout', wkY, 'none', wkN), pair('In bed before midnight', 'before', bedEarly, 'after', bedLate)].join('');
+  const assocCard = assoc ? `<div class="card"><h3>🔎 What goes with longer sleep</h3><ul class="list">${assoc}</ul>
+    <p class="note">Average sleep that night (nights counted). Based on the last ${P<=90?P*2:P} days. Associations, not cause and effect.</p></div>` : '';
+
+  // ----- sources cross-check + night by night (last 30) -----
+  const N30 = N.filter(n => n.night > addDays(today,-30));
+  const val = (n,k) => k==='cpap' ? (n.cpap?.usage_hours ? n.cpap.usage_hours*60 : null) : (n[k]?.asleep_min ?? null);
+  const srcRows = [['cpap','CPAP'],['oura','Oura'],['sleep_cycle','Sleep Cycle'],['watch','Apple Watch']].map(([k,l]) => {
+    const v = N30.map(n=>val(n,k)).filter(x=>x!=null); const sh = N30.filter(n=>val(n,k)!=null && n.cpap?.usage_hours && k!=='cpap');
+    return { k, l, n:v.length, a:avg(v), gap: sh.length ? avg(sh.map(n=>val(n,k)-n.cpap.usage_hours*60)) : null,
+      deep: avg(N30.map(n=>n[k]?.deep_min).filter(x=>x!=null)), rem: avg(N30.map(n=>n[k]?.rem_min).filter(x=>x!=null)) }; }).filter(r=>r.n);
+  const fmtGap = g => g==null ? '—' : (g<0?'−':'+')+hmm(Math.abs(g));
+  const evMap = Object.fromEntries(EV.map(e=>[addDays(e.day,1), e]));
+  const recent = N30.slice(0,14);
+  const srcCard = `<details class="card"><summary>Night by night & source cross-check (30 days)</summary>
+    ${recent.length ? `<div class="scroll"><table class="cmp tight"><tr><th>Night</th><th>CPAP</th><th>AHI</th><th>Oura</th><th>Cycle</th><th>🍺/💨</th></tr>
+      ${recent.map(n=>{ const e = evMap[n.night]; return `<tr><td>${fmtDay(n.night)}</td><td>${n.cpap?.usage_hours?hmm(n.cpap.usage_hours*60):'—'}</td><td>${n.cpap?.ahi ?? '—'}</td>
+        <td>${n.oura?hmm(n.oura.asleep_min):'—'}</td><td>${n.sleep_cycle?hmm(n.sleep_cycle.asleep_min):'—'}</td><td>${e ? `${e.drinks!=null?DRINK_LBL[Math.min(e.drinks,4)]:'–'}/${e.smoked?'✓':e.smoked===false?'–':'?'}` : ''}</td></tr>`; }).join('')}</table></div>`:''}
+    ${srcRows.length ? `<div class="scroll" style="margin-top:12px"><table class="cmp tight"><tr><th>Source</th><th>Nts</th><th>Avg</th><th>vs CPAP</th><th>Deep</th><th>REM</th></tr>
+      ${srcRows.map(r=>`<tr class="${r.k==='cpap'?'lead':''}"><td>${r.l}</td><td>${r.n}</td><td>${hmm(r.a)}</td><td>${r.k==='cpap'?'—':fmtGap(r.gap)}</td><td>${r.deep!=null?Math.round(r.deep)+'m':'—'}</td><td>${r.rem!=null?Math.round(r.rem)+'m':'—'}</td></tr>`).join('')}</table></div>
+      <p class="note">Nights are dated by the morning you woke up. Mask-on time includes time awake with the mask on, so the ring and Sleep Cycle usually read lower. 🍺/💨 = drinks / smoked the evening before.</p>`:''}</details>`;
+
+  const { SUP, html: supHtml } = suppliesCard(sup.data, supLog.data);
+  const notesCard = (notes.data||[]).length ? `<div class="card"><h3>📝 Sleep & CPAP notes · 30 days</h3><ul class="list">${notes.data.map(n=>`<li><span><em class="tag">${esc(n.category)}</em> ${esc(n.body)}</span><i>${fmtDay(localDay(new Date(n.logged_at)))}</i></li>`).join('')}</ul></div>` : '';
+
+  el.querySelector('.empty').outerHTML = `${SL.html}${per}${cpapCard}${habitsCard}${consCard}${assocCard}${srcCard}${supHtml}${notesCard}
+    <p class="note">Not medical advice. Talk with your sleep doctor about CPAP settings or anything that concerns you.</p>`;
+  $('#sPer').onclick = e => { const b = e.target.closest('button'); if (!b) return; sleepPeriod = +b.dataset.v; loadSleep(); };
+  wireSupplies(el, SUP, loadSleep);
+}
+
+/* ---------- 2.3 Rx: tirzepatide (weekly) + tadalafil (as needed) ---------- */
+const SITES = ['L abdomen','R abdomen','L thigh','R thigh','L arm','R arm'];
+const nextSite = last => SITES[(SITES.indexOf(last) + 1) % SITES.length];
+const wkday = d => new Date(d+'T12:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+const shortName = m => m.name.replace(/\s*\(.*?\)\s*/g,' ').split(/\s+\d/)[0].trim().replace(/^./, c=>c.toUpperCase());
+function weeklyStatus(m, last){
+  if (!last) return { lvl:'warn', head:'No doses logged yet', msg:'Log your first dose below to start the weekly countdown.' };
+  const due = addDays(last.day, m.every_days || 7), late = daysSince(due);
+  if (late < 0) return { lvl:'ok', due, late, head:`Next dose ${wkday(due)}`, msg:`in ${-late} day${late===-1?'':'s'}` };
+  if (late === 0) return { lvl:'warn', due, late, head:'Dose due today', msg:wkday(due) };
+  if (late <= 4) return { lvl:'warn', due, late, head:`${late} day${late===1?'':'s'} late`, msg:`The label says take a missed dose as soon as you can within 4 days of the scheduled day (${wkday(due)}), then keep your usual day.` };
+  let nxt = due; while (nxt < localDay()) nxt = addDays(nxt, m.every_days || 7);
+  return { lvl:'bad', due, late, head:`Missed — ${late} days past ${wkday(due)}`, msg:`The label says skip a dose that's more than 4 days late and take the next one on your regular day (${wkday(nxt)}).` };
+}
+function rxCards(rxMeds, D, W){
+  return rxMeds.map(m => {
+    const doses = D.filter(d => d.medication_id === m.id), last = doses[0];
+    if (m.every_days) {                                        // weekly injection
+      const st = weeklyStatus(m, last), lastMg = doses.find(d=>d.dose_mg!=null)?.dose_mg, lastU = doses.find(d=>d.units!=null)?.units, sug = nextSite(doses.find(d=>d.site)?.site);
+      const sinceVial = m.vial_started ? doses.filter(d => d.day >= m.vial_started && d.dose_mg!=null).reduce((t,d)=>t+ +d.dose_mg,0) : null;
+      const left = m.vial_mg && sinceVial!=null ? +m.vial_mg - sinceVial : null, dosesLeft = left!=null && lastMg ? Math.floor(left / lastMg + 1e-9) : null;
+      const changes = doses.slice().reverse().filter((d,i,a) => d.dose_mg!=null && (i===0 || a.slice(0,i).reverse().find(x=>x.dose_mg!=null)?.dose_mg != d.dose_mg));
+      const first = doses.at(-1), w0 = first ? W.filter(w => localDay(new Date(w.measured_at)) <= first.day)[0] || W.at(-1) : null, wN = W[0];
+      const markers = changes.map(d => ({ d:d.day, label: (+d.dose_mg)+' mg' }));
+      return `<div class="card rx" data-rx="${m.id}"><h3>💉 ${esc(shortName(m))} <span class="h3r">every ${m.every_days} days${m.pharmacy==='compound'?' · compounded':''}</span></h3>
+        <div class="rxhead ${st.lvl}">${dot(st.lvl)}<div><b>${st.head}</b><div class="sub" style="margin-top:2px">${st.msg}</div></div></div>
+        ${last ? `<p class="msg">Last: <b>${wkday(last.day)}</b>${last.dose_mg!=null?` · ${+last.dose_mg} mg`:''}${last.units!=null?` · ${+last.units} units`:''}${last.site?` · ${esc(last.site)}`:''}</p>`:''}
+        <details class="logd" ${st.lvl!=='ok'?'open':''}><summary>＋ Log a dose</summary><div class="mform">
+          <div class="grid2"><label>Date<input type="date" data-f="day" value="${localDay()}" max="${localDay()}"></label><label>Time<input type="time" data-f="time" value="${new Date().toTimeString().slice(0,5)}"></label></div>
+          <div class="grid2"><label>Dose (mg)<input type="number" inputmode="decimal" step="0.25" min="0" data-f="mg" value="${lastMg ?? ''}" placeholder="e.g. 2.5"></label>
+            <label>Units drawn<input type="number" inputmode="decimal" step="0.5" min="0" data-f="units" value="${lastU ?? ''}" placeholder="optional"></label></div>
+          <div class="flab">Site ${sug?`<span class="chip">suggested: ${sug}</span>`:''}</div>
+          <div class="sites" data-f="site">${SITES.map(s=>`<button type="button" data-v="${s}" class="${s===sug?'on':''}">${s}</button>`).join('')}</div>
+          <label>How's it going? (optional)<input data-f="note" placeholder="e.g. mild nausea day 2, appetite way down" maxlength="200"></label>
+          <button class="btn" data-save>Save dose</button></div></details>
+        ${m.vial_mg ? `<div class="vial"><b>🧪 Vial</b> ${left!=null?`≈ <b>${Math.max(0,left).toFixed(1)} mg</b> left of ${+m.vial_mg} mg${dosesLeft!=null?` · about <b>${dosesLeft} dose${dosesLeft===1?'':'s'}</b> at ${+lastMg} mg`:''}`:''} <small>· started ${fmtDay(m.vial_started)}</small>
+          ${dosesLeft!=null && dosesLeft <= 2 ? `<div class="err">Time to reorder from the compounding pharmacy.</div>`:''}</div>` : ''}
+        <details><summary>🧪 ${m.vial_mg ? 'Started a new vial?' : 'Track your vial'}</summary><div class="mform"><div class="grid2">
+          <label>Total mg in vial<input type="number" inputmode="decimal" step="0.5" data-f="vialmg" value="${m.vial_mg ?? ''}" placeholder="e.g. 20"></label>
+          <label>Started<input type="date" data-f="vialday" value="${localDay()}" max="${localDay()}"></label></div><button class="btn ghost" data-vial>Save vial</button></div></details>
+        ${W.length && first ? `<div class="sub" style="margin-top:12px">Weight since your first logged dose${w0 && wN ? ` · <b>${(+wN.value - +w0.value)>0?'+':''}${(+wN.value - +w0.value).toFixed(1)} lb</b>`:''}</div>${weightChart(W, null, localDay(), markers)}`:''}
+        ${doses.length ? `<details><summary>Dose history (${doses.length})</summary><div class="scroll"><table class="cmp tight"><tr><th>Date</th><th>mg</th><th>Units</th><th>Site</th><th></th></tr>
+          ${doses.slice(0,26).map(d=>`<tr><td>${fmtDay(d.day)}${d.note?`<div class="src">${esc(d.note)}</div>`:''}</td><td>${d.dose_mg!=null?+d.dose_mg:'—'}</td><td>${d.units!=null?+d.units:'—'}</td><td>${esc(d.site||'—')}</td><td><button class="x" data-deldose="${d.id}" aria-label="Delete">×</button></td></tr>`).join('')}</table></div></details>`:''}
+        <p class="note">Missed-dose guidance is from the Zepbound (tirzepatide) label: within 4 days take it; after that skip it, and keep at least 3 days between doses. Yours is compounded, so check anything unusual with your prescriber.</p></div>`;
+    }
+    // as-needed tablet
+    const ds = daysSince(last?.day), month = localDay().slice(0,7);
+    const mCount = doses.filter(d => d.day.startsWith(month)).length, d30 = doses.filter(d => d.day > addDays(localDay(),-30)).length;
+    const takenToday = last?.day === localDay();
+    const rs = rxStatus(m);
+    return `<div class="card rx" data-rx="${m.id}"><h3>💊 ${esc(shortName(m))} <span class="h3r">as needed${m.dose?` · ${esc(m.dose.split(/\s{2,}|\./)[0])}`:''}</span></h3>
+      <div class="tiles"><div class="tile"><span>Last taken</span><b>${last ? (ds===0?'Today':ds===1?'Yesterday':ds+'<small>d ago</small>') : '—'}</b><em>${last?wkday(last.day):''}</em></div>
+        <div class="tile"><span>This month</span><b>${mCount}</b><em>${d30} in the last 30 days</em></div></div>
+      ${m.dose && /every|hour|day/i.test(m.dose) ? `<p class="note">Your note: ${esc(m.dose)}</p>`:''}
+      <div class="ract" style="margin-top:12px"><input type="date" data-f="day" value="${localDay()}" max="${localDay()}" aria-label="Date taken"><button class="btn sm" data-took>${takenToday?'＋ Log another':'✓ Took one'}</button></div>
+      ${rs ? `<p class="sub">${dot(rs.lvl)}${rs.msg}</p>`:''}
+      ${doses.length ? `<details><summary>History (${doses.length})</summary><ul class="list">${doses.slice(0,20).map(d=>`<li><span>${wkday(d.day)}</span><button class="x" data-deldose="${d.id}" aria-label="Delete">×</button></li>`).join('')}</ul></details>`:''}</div>`;
+  }).join('');
+}
+function wireRx(el, rxMeds, D, reload){
+  el.querySelectorAll('.card.rx').forEach(card => {
+    const m = rxMeds.find(x => x.id === card.dataset.rx); if (!m) return;
+    const f = k => card.querySelector(`[data-f="${k}"]`);
+    const sites = f('site'); if (sites) sites.onclick = e => { const b = e.target.closest('button'); if (!b) return; sites.querySelectorAll('button').forEach(x=>x.classList.toggle('on', x===b)); };
+    const insertDose = async row => {
+      const prev = D.find(d => d.medication_id === m.id);
+      if (m.every_days && prev) { const hrs = (new Date(row.taken_at) - new Date(prev.taken_at)) / 36e5;
+        if (hrs < 72 && !confirm(`Your last dose was ${Math.round(hrs)} hours earlier. The label says to keep at least 3 days (72 hours) between doses. Save anyway?`)) return false; }
+      const { error } = await sb.from('rx_dose').insert({ user_id:user.id, medication_id:m.id, ...row });
+      if (error) { alert('Could not save: '+error.message); return false; } return true; };
+    const save = card.querySelector('[data-save]'); if (save) save.onclick = async () => {
+      const day = f('day').value || localDay(), time = f('time').value || '12:00';
+      const ok = await insertDose({ day, taken_at: new Date(day+'T'+time).toISOString(), dose_mg: f('mg').value===''?null:+f('mg').value, units: f('units').value===''?null:+f('units').value,
+        site: sites?.querySelector('.on')?.dataset.v || null, note: f('note').value.trim() || null });
+      if (ok) reload(); };
+    const took = card.querySelector('[data-took]'); if (took) took.onclick = async () => {
+      const day = f('day').value || localDay(); took.disabled = true;
+      const ok = await insertDose({ day, taken_at: day===localDay() ? new Date().toISOString() : new Date(day+'T20:00').toISOString() });
+      if (ok) reload(); else took.disabled = false; };
+    const vial = card.querySelector('[data-vial]'); if (vial) vial.onclick = async () => {
+      const mg = parseFloat(f('vialmg').value); if (!(mg > 0)) { f('vialmg').focus(); return; }
+      const { error } = await sb.from('medication').update({ vial_mg: mg, vial_started: f('vialday').value || localDay() }).eq('id', m.id);
+      if (error) return alert('Could not save: '+error.message); reload(); };
+    card.querySelectorAll('[data-deldose]').forEach(b => b.onclick = async () => {
+      if (!confirm('Delete this entry?')) return;
+      const { error } = await sb.from('rx_dose').delete().eq('id', b.dataset.deldose); if (error) return alert('Could not delete: '+error.message); reload(); });
+  });
+}
+
+/* ---------- 2.3 sleep card (shared by Today + Sleep tab) ---------- */
+function buildSleep(N, day, isToday){
+  const today = localDay(), prev = addDays(day,-1);
   const lastN = isToday ? N[0] : N.find(n => n.night === day);
   const prevN = N.find(n => n.night === prev);
   const last7 = N.filter(n => n.night > addDays(day,-7) && n.duration != null);
@@ -739,6 +982,73 @@ async function loadToday(){
       ${avg7 ? `<p class="msg">7-night average <b>${fmtMin(avg7)}</b> · goal met <b>${hit7} of ${last7.length}</b> nights${hit7>=4?' 🌊':''}</p>`:''}
       <details><summary>Compare sources for this night</summary>${sleepCompare(lastN)}</details>`
     : `<p class="empty">${isToday?'No recent sleep':'No sleep recorded for the night ending '+shortDay(day)}</p>`}</div>`;
+  return { html: sleepCard, lastN, prevN, lt, usualBed, usualWake, avg7, hit7, last7 };
+}
+
+/* ---------- today ---------- */
+async function loadToday(){
+  const el = $('#v-today'), today = localDay(), h = new Date().getHours();
+  const day = viewDay && viewDay < today ? viewDay : today, isToday = day === today, prev = addDays(day, -1);
+  if (!isToday) viewDay = day; else viewDay = null;
+  const endEx = isToday ? today : addDays(day, 1);           // "complete days" end before this
+  const greet = !isToday ? 'Looking back' : h<12 ? 'Good morning' : h<17 ? 'Good afternoon' : 'Good evening';
+  const name = (user.user_metadata?.full_name || '').split(' ')[0] || '';
+  el.innerHTML = banner() + `<div class="empty">Loading…</div>`;
+  const from30 = addDays(day,-31);
+  const [sleep, cpap, act, heart, wk, wts, ht, prefQ, aiQ, drs, medsQ, supQ, evQ, dosesQ] = await Promise.all([
+    sb.from('sleep_night').select('night,source,asleep_min,deep_min,rem_min,bedtime,wake_time').gte('night',from30).lte('night',day).order('night',{ascending:false}),
+    sb.from('cpap_session').select('night,usage_hours,ahi,leak_95,myair_score').gte('night',from30).lte('night',day).order('night',{ascending:false}),
+    sb.from('daily_activity').select('day,steps,exercise_min').gte('day',addDays(day,-15)).lte('day',day).order('day',{ascending:false}),
+    sb.from('heart_daily').select('day,resting_hr,hrv_sdnn,hr_max,spo2_pct').gte('day',from30).lte('day',day).order('day',{ascending:false}),
+    sb.from('workout').select('started_at,activity,duration_min,distance_mi').gte('started_at',dayStartISO(addDays(endEx,-14))).lt('started_at',dayStartISO(addDays(day,1))).order('started_at',{ascending:false}),
+    sb.from('body_measurement').select('measured_at,value').eq('kind','weight').lt('measured_at',dayStartISO(addDays(day,1))).order('measured_at',{ascending:false}).limit(200),
+    sb.from('clinical_record').select('recorded_on,resource').eq('resource_type','Observation').eq('display','Height').order('recorded_on',{ascending:false}).limit(1),
+    sb.from('user_pref').select('weight_goal_lb,weight_goal_date').maybeSingle(),
+    sb.from('ai_summary').select('body,created_at').eq('day',day).maybeSingle(),
+    sb.from('daily_record').select('day,mood,energy').in('day',[prev,day]),
+    isToday ? sb.from('medication').select('id,name,pharmacy,supply_days,last_filled,rx_page,every_days').eq('active',true) : Promise.resolve({data:[]}),
+    isToday ? sb.from('cpap_supply').select('item,interval_days,last_replaced') : Promise.resolve({data:[]}),
+    sb.from('evening_log').select('day,drinks,smoked,smoke_type,last_drink').in('day',[addDays(day,-1), day]),
+    isToday ? sb.from('rx_dose').select('medication_id,day,taken_at').order('taken_at',{ascending:false}).limit(20) : Promise.resolve({data:[]})
+  ]);
+  const goal = prefQ.data?.weight_goal_lb != null ? +prefQ.data.weight_goal_lb : null;
+
+  // ----- header: age, height, weight (+ trend & goal) -----
+  const cm = +(ht.data?.[0]?.resource?.valueQuantity?.value || 0);
+  const inches = cm ? Math.round(cm/2.54) : null;
+  const heightTxt = inches ? `${Math.floor(inches/12)}′${inches%12}″` : null;
+  const W = wts.data || [];
+  const wLast = W[0], wPrev = W.find(w => localDay(new Date(w.measured_at)) !== localDay(new Date(wLast?.measured_at||0)));
+  const wDays = wLast ? Math.round((new Date(day) - new Date(localDay(new Date(wLast.measured_at))))/86400000) : null;
+  const wChg = (wLast && wPrev) ? +wLast.value - +wPrev.value : null;
+  const slope = weightTrend(W, day);
+  const toGo = (goal != null && wLast) ? +wLast.value - goal : null;
+  const towardGoal = slope != null && toGo != null && Math.abs(toGo) >= 0.5 && Math.sign(slope) === -Math.sign(toGo) && Math.abs(slope) >= 0.1;
+  const eta = towardGoal ? addDays(day, Math.round(Math.abs(toGo/slope)*7)) : null;
+  const weightCard = `<button class="wpill" id="wpill" aria-expanded="false">${wLast ? `<div class="wv">⚖️ ${(+wLast.value).toFixed(1)}<small>lb</small></div>
+      <div class="wl">${fmtDay(localDay(new Date(wLast.measured_at)))} · ${wDays>0?wDays+'d ago':isToday?'today':'that day'}</div>
+      ${slope!=null ? `<div class="wc">${slope<-0.05?'↘':slope>0.05?'↗':'→'} ${Math.abs(slope).toFixed(1)} lb/wk <span class="wl">30d</span></div>`
+        : wChg!=null ? `<div class="wc">${wChg<0?'↓':wChg>0?'↑':'→'} ${Math.abs(wChg).toFixed(1)} lb vs prior</div>`:''}
+      ${goal!=null ? `<div class="wg">🎯 ${goal}${toGo!=null ? Math.abs(toGo)<0.5 ? ' · at goal 🎉' : ` · ${Math.abs(toGo).toFixed(1)} to go` : ''}</div>` : `<div class="wl">tap to set a goal</div>`}
+      ${isToday && wDays>7 ? `<div class="wn">Time to weigh in</div>`:''}` : `<div class="wl">⚖️ No weigh-ins yet</div>`}</button>`;
+  const weightDetail = `<div class="card" id="wdetail" hidden><h3>⚖️ Weight · last 90 days</h3>${weightChart(W, goal, day)}
+      <p class="msg">${slope!=null ? `30-day trend: <b>${slope<0?'down':slope>0?'up':'flat at'} ${Math.abs(slope).toFixed(1)} lb a week</b>.` : 'Not enough recent weigh-ins for a trend yet.'}
+        ${goal!=null && toGo!=null ? Math.abs(toGo)<0.5 ? ' You are at your goal 🎉' : towardGoal ? ` At this pace you reach <b>${goal} lb around ${new Date(eta+'T12:00').toLocaleDateString('en-US',{month:'short',year:'numeric'})}</b>${prefQ.data?.weight_goal_date?` (target ${fmtDay(prefQ.data.weight_goal_date)})`:''}.` : ` ${Math.abs(toGo).toFixed(1)} lb from your goal — the trend isn't heading there yet.` : ''}</p>
+      <div class="mform"><label>Goal weight (lb)<input id="gLb" type="number" inputmode="decimal" step="0.5" min="80" max="400" value="${goal ?? ''}" placeholder="e.g. 185"></label>
+        <label>Target date (optional)<input id="gDate" type="date" value="${prefQ.data?.weight_goal_date || ''}"></label>
+        <div class="row"><button class="btn" id="gSave">Save goal</button>${goal!=null?`<button class="btn ghost" id="gClear">Clear</button>`:''}</div></div></div>`;
+
+  // ----- sleep (full card lives on the Sleep tab) -----
+  const N = sleepNights(sleep.data||[], cpap.data||[]);
+  const SL = buildSleep(N, day, isToday);
+  const { lastN, prevN, lt, usualBed, usualWake, avg7, hit7, last7 } = SL;
+  const lastOk = lastN && (isToday || lastN.night===day);
+  const sleepCard = `<button class="card sleepmini" id="openSleep"><h3>😴 Sleep <span class="h3r">open Sleep →</span></h3>
+    ${lastOk ? `<div class="mini3"><div><b class="${(lastN.duration||0)>=SLEEP_TARGET?'okc':''}">${hmm(lastN.duration)}</b><span>${isToday && lastN.night===today?'last night':'night ending '+shortDay(lastN.night)}</span></div>
+      <div><b>${lt?clock(lt.bedtime).replace(' ',''):'—'}–${lt?.wake_time?clock(lt.wake_time).replace(' ',''):'—'}</b><span>bed – wake</span></div>
+      <div><b>${avg7?hmm(avg7):'—'}</b><span>7-night avg</span></div></div>
+      ${lastN.cpap ? `<div class="src">CPAP ${hmm(lastN.cpap.usage_hours*60)} mask-on · AHI ${lastN.cpap.ahi ?? '—'}${lastN.cpap.leak_95!=null?` · leak ${lastN.cpap.leak_95}`:''}</div>`:''}`
+    : `<p class="empty">No sleep recorded for this night yet.</p>`}</button>`;
 
   // ----- move + week over week -----
   const AR = act.data||[];
@@ -789,6 +1099,7 @@ async function loadToday(){
   // ----- day vs the day before -----
   const hD = Hd.find(r=>r.day===day), hP = Hd.find(r=>r.day===prev);
   const dr = k => (drs.data||[]).find(r=>r.day===k);
+  const evRow2 = k => (evQ.data||[]).find(r => r.day === k);
   const cmpRows = [
     ['😴 Sleep', prevN?.duration, lastN && lastN.night===day ? lastN.duration : null, v=>hmm(v), +1, 15],
     ['🚶 Steps', aPrev?.steps, aDay?.steps, fmtNum, +1, 250],
@@ -796,22 +1107,33 @@ async function loadToday(){
     ['❤️ Resting HR', hP?.resting_hr, hD?.resting_hr, v=>Math.round(v), -1, 1],
     ['〰️ HRV', hP?.hrv_sdnn, hD?.hrv_sdnn, v=>Math.round(v), +1, 2],
     ['🙂 Mood', dr(prev)?.mood, dr(day)?.mood, v=>['','😫','😕','😐','🙂','😃'][v]||'—', +1, 1],
-    ['⚡ Energy', dr(prev)?.energy, dr(day)?.energy, v=>v, +1, 1]
+    ['⚡ Energy', dr(prev)?.energy, dr(day)?.energy, v=>v, +1, 1],
+    ['🍺 Drinks', evRow2(prev)?.drinks, evRow2(day)?.drinks, v=>DRINK_LBL[Math.min(v,4)], 0, 1]
   ].filter(r => r[1]!=null || r[2]!=null);
   const cmpCard = cmpRows.length ? `<div class="card"><h3>📅 ${isToday?'Today':shortDay(day)} vs the day before</h3>
     <table class="cmp tight"><tr><th></th><th>${shortDay(prev)}</th><th>${isToday?'Today':shortDay(day)}</th><th></th></tr>
     ${cmpRows.map(([l,a,b,f,dir,eps]) => { const both = a!=null && b!=null, df = both ? +b - +a : 0;
-      const c = !both ? '' : Math.abs(df) < eps ? '<span class="chip neutral">same</span>' : `<span class="chip ${df*dir>0?'':'dn'}">${df>0?'↑':'↓'}</span>`;
+      const c = !both ? '' : Math.abs(df) < eps ? '<span class="chip neutral">same</span>' : `<span class="chip ${dir===0?'neutral':df*dir>0?'':'dn'}">${df>0?'↑':'↓'}</span>`;
       return `<tr><td>${l}</td><td>${a!=null?f(+a):'—'}</td><td><b>${b!=null?f(+b):'—'}</b></td><td>${c}</td></tr>`; }).join('')}</table>
     ${isToday?`<p class="note">Today's steps and active minutes are still counting.</p>`:''}</div>` : '';
 
   // ----- due soon: refills + CPAP supplies (today only) -----
   const dueRx = (medsQ.data||[]).map(m=>({m, s:rxStatus(m)})).filter(x=>x.s && x.s.lvl!=='ok');
   const dueSup = mergeSupplies(supQ.data).filter(s=>s.last_replaced).map(s=>({s, st:supplyStatus(s)})).filter(x=>x.st.lvl!=='ok');
-  const dueCard = (dueRx.length || dueSup.length) ? `<button class="card due" id="dueGo">
-    <h3>🔔 Coming due <span class="h3r">open Meds →</span></h3>
+  const dueShot = (medsQ.data||[]).filter(m => m.rx_page && m.every_days).map(m => ({ m, st: weeklyStatus(m, (dosesQ.data||[]).find(d => d.medication_id===m.id)) }))
+    .filter(x => x.st.late != null && x.st.late >= -1);
+  const dueCard = (dueRx.length || dueSup.length || dueShot.length) ? `<button class="card due" id="dueGo">
+    <h3>🔔 Coming due <span class="h3r">open Rx →</span></h3>
+    ${dueShot.map(({m,st})=>`<div class="dl">${dot(st.late<0?'ok':st.lvl)}<b>💉 ${esc(shortName(m))}</b> <span>${st.late<0?'due tomorrow':st.head}</span></div>`).join('')}
     ${dueRx.map(({m,s})=>`<div class="dl">${dot(s.lvl)}<b>${esc(m.name)}</b> <span>${s.msg} · ${RX_PH[m.pharmacy]||'pharmacy?'}</span></div>`).join('')}
     ${dueSup.map(({s,st})=>`<div class="dl">${dot(st.lvl)}<b>CPAP ${esc(s.item)}</b> <span>${st.msg}</span></div>`).join('')}</button>` : '';
+
+  // ----- evening: drinks & smoking -----
+  const evRow = k => (evQ.data||[]).find(r => r.day === k);
+  let evCard = '';
+  if (!isToday) evCard = eveningCard(day, evRow(day), 'Evening of '+shortDay(day));
+  else if (h >= 18) evCard = eveningCard(day, evRow(day), 'Tonight');
+  else if (!evRow(prev)) evCard = eveningCard(prev, null, 'Last night — drinks or smoking?');
 
   // ----- AI recap -----
   const AI = aiQ.data;
@@ -833,6 +1155,8 @@ async function loadToday(){
     heart: { resting_hr: hD?.resting_hr ?? null, resting_hr_usual: base('resting_hr') ? Math.round(base('resting_hr')) : null, hrv: hD?.hrv_sdnn ?? null, hrv_usual: base('hrv_sdnn') ? Math.round(base('hrv_sdnn')) : null,
       max_hr: hD?.hr_max ?? null, spo2_pct: hD?.spo2_pct ?? null, prev_day_resting_hr: hP?.resting_hr ?? null, prev_day_hrv: hP?.hrv_sdnn ?? null },
     weight: wLast ? { lb: +wLast.value, measured: localDay(new Date(wLast.measured_at)), trend_lb_per_week_30d: slope!=null ? +slope.toFixed(2) : null, goal_lb: goal } : null,
+    evening_before_last_night: evRow2(prev) ? { drinks: evRow2(prev).drinks, smoked: evRow2(prev).smoked, smoke_type: evRow2(prev).smoke_type } : null,
+    this_evening: evRow2(day) ? { drinks: evRow2(day).drinks, smoked: evRow2(day).smoked, smoke_type: evRow2(day).smoke_type } : null,
     mood_1to5: dr(day)?.mood ?? null, energy_1to5: dr(day)?.energy ?? null, prev_day_mood: dr(prev)?.mood ?? null, prev_day_energy: dr(prev)?.energy ?? null
   };
 
@@ -849,12 +1173,14 @@ async function loadToday(){
       ${dayNav}
       <div class="me">${ageFrom(DOB)} yrs${heightTxt?` · ${heightTxt}`:''}</div></div>${weightCard}</div>
     ${weightDetail}
-    ${isToday ? dueCard + ci + aiCard + cmpCard : aiCard + cmpCard + ci}${sleepCard}${moveCard}${heartCard}
+    ${isToday ? dueCard + ci + evCard + aiCard + cmpCard : aiCard + cmpCard + ci + evCard}${sleepCard}${moveCard}${heartCard}
     <p class="note">Not medical advice. Check with your care team about anything that concerns you.</p>`;
   wireCheckin(day);
 
   // wiring: due card, day nav
-  if ($('#dueGo')) $('#dueGo').onclick = () => { location.hash = 'meds'; showTab('meds'); };
+  if ($('#dueGo')) $('#dueGo').onclick = () => { location.hash = 'rx'; showTab('rx'); };
+  $('#openSleep').onclick = () => { location.hash = 'sleep'; showTab('sleep'); };
+  wireEvening(loadToday);
   const go = d => { viewDay = d >= today ? null : d; loadToday(); };
   el.querySelectorAll('[data-nav]').forEach(b => b.onclick = () => go(addDays(day, +b.dataset.nav)));
   el.querySelectorAll('[data-go]').forEach(b => b.onclick = () => go(b.dataset.go));
@@ -924,9 +1250,10 @@ async function loadTrends(){
       <td>${st.deep_min!=null?st.deep_min+'m':'—'}</td><td>${st.rem_min!=null?st.rem_min+'m':'—'}</td></tr>`; }).join('')}
   </table></div><p class="note">Times in h:mm. Cycle = Sleep Cycle. *Deep/REM from Oura when available, otherwise Sleep Cycle. Nights are dated by the morning you woke up.</p></div>` : '';
   const stv = (st.data||[]).map(r=>+r.value);
-  el.querySelector('.empty').outerHTML = cross + nightsTable +
+  el.querySelector('.empty').outerHTML = `<button class="card sleepmini" id="toSleep"><h3>😴 Sleep & CPAP <span class="h3r">open Sleep →</span></h3><p class="sub" style="margin:0">Sleep, CPAP and drinks/smoking analysis now live on the Sleep tab.</p></button>` +
     `<div class="card"><h3>🚶 Steps · last 30 days</h3>${stv.length?`<div class="big">${fmtNum(avg(stv))}</div><div class="sub">average · ${stv.length} days</div>${spark(stv)}`:'<p class="empty">No data yet</p>'}</div>` +
     `<p class="note">Fuller 7/30/90-day and 1-year views and the weekly summary arrive in Phase 4.</p>`;
+  $('#toSleep').onclick = () => { location.hash = 'sleep'; showTab('sleep'); };
 }
 
 /* ---------- care (labs preview) ---------- */
